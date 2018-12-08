@@ -19,7 +19,7 @@
         if (keyPressed === ENTER_KEY) {
           // Get submitted value from input
           var todo = this.value;
-          todo = '<div class="todo-item"><p>' + todo + '<span class="delete-icon"><i class="fas fa-times-circle fa-2x"></i></span></p></div>';
+          todo = '<div class="todo-item"><p>' + todo + '<span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></p></div>';
           
           // Clear input field
           that.$todoInput.val('');
