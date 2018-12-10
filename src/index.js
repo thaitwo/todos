@@ -1,7 +1,6 @@
 (function(){
   var ENTER_KEY = 13;
-  var todosStorage = [];
-  var count = 1;
+  var storage = store.get('todos') || [];
 
   var App = {
     
@@ -15,46 +14,61 @@
     init: function() {
       this.$todosContainer = $('#todos-container');
       this.$todoInput = $('#todo-input');
-      this.displayTodos();
+      this.displayTodosOnLoad();
       this.getInputValue();
+      this.storageHasData();
     },
   
+
     getInputValue: function() {
       var that = this;
       
+      // Check for any instance of a key press
       this.$todoInput.on('keypress', function(event) {
         var keyPressed = event.which || event.keyCode;
   
-        // If "Enter" button is pressed...
+        // Check if "Enter" button is pressed
         if (keyPressed === ENTER_KEY) {
           // Get submitted value from input
           var todo = this.value;
-          todosStorage.push(todo);
-          store.set('todos', todosStorage);
-          console.log(todosStorage);
-          todo = '<div class="todo-item"><p>' + todo + '<span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></p></div>';
-          
+          // Add new submitted todo to storage
+          storage.push(todo);
+          // Once new todo is added to array, add that array back to storage
+          store.set('todos', storage);
           // Clear input field
           that.$todoInput.val('');
-  
+          // Make todo an HTML element
+          todoHTML = '<div class="todo-item"><p>' + todo + '<span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></p></div>';
           // Append input value
-          that.$todosContainer.append(todo);
-          
-          count++;
+          that.$todosContainer.append(todoHTML);
+
         }
       })
     },
 
 
+    storageHasData: function() {
+      return storage.length > 0;
+    },
 
-    displayTodos: function() {
+
+    displayTodos: function(data) {
       var that = this;
-      var todos = store.get('todos') || [];
 
-      if (todos.length > 0) {        
-        todos.forEach(function(todo) {
-          that.$todosContainer.append(todo);
-        });
+      // Display each todo item in storage on screen
+      data.forEach(function(todo) {
+        var todoHTML = '<div class="todo-item"><p>' + todo + '<span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></p></div>';
+        that.$todosContainer.append(todoHTML);
+      })
+    },
+
+    
+    displayTodosOnLoad: function() {
+      var that = this;
+
+      // Check if todos storage had any todo items
+      if (this.storageHasData() === true) {
+        this.displayTodos(storage);
       }
     }
   };
