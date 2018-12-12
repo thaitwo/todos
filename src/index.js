@@ -14,9 +14,11 @@
     init: function() {
       this.$todosContainer = $('#todos-container');
       this.$todoInput = $('#todo-input');
+      this.clearButton = document.getElementById('clear-button');
       this.displayTodosOnLoad();
       this.getInputValue();
       this.storageHasData();
+      this.activateClearButton();
     },
   
 
@@ -41,8 +43,20 @@
           todoHTML = '<div class="todo-item"><p>' + todo + '<span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></p></div>';
           // Append input value
           that.$todosContainer.append(todoHTML);
-
+          // Make "Clear All" button visible
+          that.clearButton.classList.add('is-visible');
         }
+      })
+    },
+
+    activateClearButton: function() {
+      var that = this;
+
+      this.clearButton.addEventListener('click', function(event) {
+        event.preventDefault();
+
+        store.set('todos', []);
+        that.$todosContainer.empty();
       })
     },
 
