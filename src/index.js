@@ -3,9 +3,6 @@
   var storage = store.get('todos') || [];
 
   var App = {
-    
-    // When user clicks on delete icon, remove todo from list
-
 
     init: function() {
       this.$todosContainer = $('#todos-container');
@@ -45,11 +42,13 @@
           that.$deleteIcon = $('.delete-icon');
           // Make "Clear All" button visible
           that.$clearButton.addClass('is-visible');
+          that.activateDeleteIcon();
         }
-      })
+      });
     },
 
 
+    // Clear all todo items on button click
     activateClearButton: function() {
       var that = this;
 
@@ -61,15 +60,16 @@
       })
     },
 
-
+    
+    // Delete todo item on icon click
     activateDeleteIcon: function() {
       var that = this;
 
       this.$deleteIcon.on('click', function(event) {
         event.preventDefault();
-        console.log('event', event);
         // Get name of todo item
         var todo = event.currentTarget.parentElement.textContent;
+        console.log(todo, ' has been removed.');
         // Get todos array for store
         var todoList = store.get('todos');
         var index = todoList.indexOf(todo);
@@ -79,18 +79,18 @@
         }
 
         store.set('todos', todoList);
-        todoList = store.get('todos');
         
         that.displayTodos(todoList);
       })
     },
 
-
+    // Check that storage has at least one todo item
     storageHasData: function() {
       return storage.length > 0;
     },
 
 
+    // Display all todos with data provided
     displayTodos: function(todoList) { 
       this.$todosContainer.empty();     
       // Display each todo item in storage on screen
@@ -99,9 +99,11 @@
       });
       this.$todosContainer.append(todos);
       this.$deleteIcon = $('.delete-icon');
+      this.activateDeleteIcon();
     },
 
     
+    // Automatically display all todos on page load
     displayTodosOnLoad: function() {
       // Check if todos storage had any todo items
       if (this.storageHasData() === true) {
