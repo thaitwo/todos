@@ -36,9 +36,32 @@ body {
 
 .todo-item {
   border-bottom: 1px solid #eeeeee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.todo-item p {
+  margin: 0;
+  padding: 1rem 0;
+}
+
+.todo-item:hover .delete-icon {
+  /* display:block; */
 }
 
 .delete-icon {
-  position: absolute;
-  right: 0;
+  background-color: #eeeeee;
+  border-radius: .2rem;
+  display: block;
+  padding: .5rem;
+}
+
+.delete-icon:hover {
+  cursor: pointer;
+}
+
+.delete-icon i {
+  display: block;
 }
