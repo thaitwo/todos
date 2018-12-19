@@ -27,7 +27,8 @@
         // Check if "Enter" button is pressed
         if (keyPressed === ENTER_KEY) {
           // Get submitted value from input
-          var todoItem = this.value;
+          var $input = $(event.target);
+          var todoItem = $input.val().trim();
           // Add new submitted todo to storage
           var todoList = store.get('todos') || [];
           todoList.push(todoItem);
@@ -36,7 +37,7 @@
           // Clear input field
           that.$todoInput.val('');
           // Make todo an HTML element
-          todoHTML = '<div class="todo-item"><p>' + todoItem + '</p><span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></div>';
+          todoHTML = '<li class="todo-item"><label>' + todoItem + '</label><span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></li>';
           // Append input value
           that.$todosContainer.append(todoHTML);
           that.$deleteIcon = $('.delete-icon');
@@ -84,6 +85,8 @@
       })
     },
 
+
+
     // Check that storage has at least one todo item
     storageHasData: function() {
       return storage.length > 0;
@@ -95,7 +98,7 @@
       this.$todosContainer.empty();     
       // Display each todo item in storage on screen
       var todos = todoList.map(function(todo) {
-        return '<div class="todo-item"><p>' + todo + '</p><span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></div>';
+        return '<li class="todo-item"><label>' + todo + '</label><span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></li>';
       });
       this.$todosContainer.append(todos);
       this.$deleteIcon = $('.delete-icon');

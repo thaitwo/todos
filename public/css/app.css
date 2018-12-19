@@ -42,7 +42,7 @@ body {
   position: relative;
 }
 
-.todo-item p {
+.todo-item label {
   margin: 0;
   padding: 1rem 0;
 }
@@ -62,6 +62,11 @@ body {
   cursor: pointer;
 }
 
+.delete-icon:hover i {
+  color: #000000;
+}
+
 .delete-icon i {
+  color: #cccccc;
   display: block;
 }
