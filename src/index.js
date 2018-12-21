@@ -4,7 +4,7 @@
   var App = {
 
     init: function() {
-      this.$todosContainer = $('#todos-container');
+      this.$todosList = $('#todos-list');
       this.$todoInput = $('#todo-input');
       this.$clearButton = $('#clear-button');
       this.todos = store.get('todos') || [];
@@ -12,8 +12,22 @@
       this.displayTodosOnLoad();
       this.getInputValue();
       this.storageHasData();
-      // this.updateTodo();
+      this.activateEventHandlers();
       this.activateClearButton();
+    },
+
+
+    // Activate all event handlers
+    activateEventHandlers: function() {
+      this.$todosList
+      .on('dblclick', 'label', this.editTodo.bind(this))
+      .on('focusout', '.todo-edit', this.focusOnInput.bind(this))
+    },
+
+    
+    focusOnInput: function(event) {
+      this.$todoInput.focus();
+      $(event.currentTarget).closest('li').removeClass('editing'); // fix this
     },
     
   
@@ -41,9 +55,16 @@
           // Clear input field
           that.$todoInput.val('');
           // Make todo an HTML element
-          todoHTML = '<li class="todo-item"><label>' + todoItem.task + '</label><button class="delete-icon"><i class="fas fa-times fa-lg"></i></button></li>';
+          todoHTML =
+          '<li class="todo-item">' +
+            '<div class="todo-view">' +
+              '<label>' + todoItem.task + '</label>' +
+              '<button class="delete-icon"><i class="fas fa-times fa-lg"></i></button>' +
+            '</div>' +
+            '<input class="todo-edit" value="' + todoItem.task + '">'+
+          '</li>';
           // Append input value
-          that.$todosContainer.append(todoHTML);
+          that.$todosList.append(todoHTML);
           that.$deleteIcon = $('.delete-icon');
           // Make "Clear All" button visible
           that.$clearButton.addClass('is-visible');
@@ -60,7 +81,7 @@
       this.$clearButton.on('click', function(event) {
         event.preventDefault();
         store.set('todos', []);
-        that.$todosContainer.empty();
+        that.$todosList.empty();
       })
     },
 
@@ -97,15 +118,6 @@
     },
 
 
-    // On todo update, retrieve updated text and save to storage
-    updateTodo: function() {
-      this.$todosContainer.on('input',  '.todo-item p', function(event) {
-        var updatedTodo = event.currentTarget.textContent;
-        // 
-      })
-    },
-
-
     // Check that storage has at least one todo item
     storageHasData: function() {
       return this.todos.length > 0;
@@ -114,12 +126,18 @@
 
     // Display all todos with data provided
     displayTodos: function(todoList) { 
-      this.$todosContainer.empty();     
+      this.$todosList.empty();     
       // Display each todo item in storage on screen
       var todos = todoList.map(function(todo) {
-        return '<li class="todo-item"><label>' + todo.task + '</label><button class="delete-icon"><i class="fas fa-times fa-lg"></i></button></li>';
+        return '<li class="todo-item">' +
+          '<div class="todo-view">' +
+            '<label>' + todo.task + '</label>' +
+            '<button class="delete-icon"><i class="fas fa-times fa-lg"></i></button>' +
+          '</div>' +
+          '<input class="todo-edit" value="' + todo.task + '">'+
+        '</li>';
       });
-      this.$todosContainer.append(todos);
+      this.$todosList.append(todos);
       this.$deleteIcon = $('.delete-icon');
       this.activateDeleteButton();
     },
@@ -131,6 +149,13 @@
       if (this.storageHasData() === true) {
         this.displayTodos(this.todos);
       }
+    },
+
+
+    // Edit todo item
+    editTodo: function(event) {
+        $(event.currentTarget).closest('li').addClass('editing');
+        $('.todo-edit').focus();
     }
   };
 
