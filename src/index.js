@@ -1,6 +1,5 @@
 (function(){
   var ENTER_KEY = 13;
-  var storage = store.get('todos') || [];
 
   var App = {
 
@@ -8,13 +7,15 @@
       this.$todosContainer = $('#todos-container');
       this.$todoInput = $('#todo-input');
       this.$clearButton = $('#clear-button');
+      this.todos = store.get('todos') || [];
       this.$deleteIcon;
       this.displayTodosOnLoad();
       this.getInputValue();
       this.storageHasData();
+      // this.updateTodo();
       this.activateClearButton();
-      this.activateDeleteIcon();
     },
+    
   
     // Retrieve input value and add to storage
     getInputValue: function() {
@@ -26,24 +27,27 @@
   
         // Check if "Enter" button is pressed
         if (keyPressed === ENTER_KEY) {
-          // Get submitted value from input
+          // Get submitted value from input and create object
           var $input = $(event.target);
-          var todoItem = $input.val().trim();
+          var val = $input.val().trim();
+          var todoItem = {
+            task: val,
+            completed: false
+          };
           // Add new submitted todo to storage
-          var todoList = store.get('todos') || [];
-          todoList.push(todoItem);
-          // Once new todo is added to array, add that array back to storage
-          store.set('todos', todoList);
+          that.todos.push(todoItem);
+          // Once new todo is added to array, update storage
+          store.set('todos', that.todos);
           // Clear input field
           that.$todoInput.val('');
           // Make todo an HTML element
-          todoHTML = '<li class="todo-item"><label>' + todoItem + '</label><span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></li>';
+          todoHTML = '<li class="todo-item"><label>' + todoItem.task + '</label><button class="delete-icon"><i class="fas fa-times fa-lg"></i></button></li>';
           // Append input value
           that.$todosContainer.append(todoHTML);
           that.$deleteIcon = $('.delete-icon');
           // Make "Clear All" button visible
           that.$clearButton.addClass('is-visible');
-          that.activateDeleteIcon();
+          that.activateDeleteButton();
         }
       });
     },
@@ -55,41 +59,56 @@
 
       this.$clearButton.on('click', function(event) {
         event.preventDefault();
-
         store.set('todos', []);
         that.$todosContainer.empty();
       })
     },
 
     
+    // Retrieve index for selected todo item 
+    getIndex: function(task) {
+      for (var i = 0; i < this.todos.length; i++) {
+        if (this.todos[i].task === task) {
+          return i;
+        }
+      }
+    },
+
+    
     // Delete todo item on icon click
-    activateDeleteIcon: function() {
+    activateDeleteButton: function() {
       var that = this;
 
       this.$deleteIcon.on('click', function(event) {
         event.preventDefault();
         // Get name of todo item
-        var todo = event.currentTarget.parentElement.textContent;
-        console.log(todo, ' has been removed.');
-        // Get todos array for store
-        var todoList = store.get('todos');
-        var index = todoList.indexOf(todo);
-
+        var task = event.currentTarget.parentElement.textContent;
+        // Get index for clicked item
+        var index = that.getIndex(task);
+        // Remove item from list based on index
         if (index > -1) {
-          todoList.splice(index, 1);
+          that.todos.splice(index, 1);
         }
-
-        store.set('todos', todoList);
-        
-        that.displayTodos(todoList);
+        // Update local storage
+        store.set('todos', that.todos);
+        // Display todos
+        that.displayTodos(that.todos);
       })
     },
 
 
+    // On todo update, retrieve updated text and save to storage
+    updateTodo: function() {
+      this.$todosContainer.on('input',  '.todo-item p', function(event) {
+        var updatedTodo = event.currentTarget.textContent;
+        // 
+      })
+    },
+
 
     // Check that storage has at least one todo item
     storageHasData: function() {
-      return storage.length > 0;
+      return this.todos.length > 0;
     },
 
 
@@ -98,11 +117,11 @@
       this.$todosContainer.empty();     
       // Display each todo item in storage on screen
       var todos = todoList.map(function(todo) {
-        return '<li class="todo-item"><label>' + todo + '</label><span class="delete-icon"><i class="fas fa-times fa-lg"></i></span></li>';
+        return '<li class="todo-item"><label>' + todo.task + '</label><button class="delete-icon"><i class="fas fa-times fa-lg"></i></button></li>';
       });
       this.$todosContainer.append(todos);
       this.$deleteIcon = $('.delete-icon');
-      this.activateDeleteIcon();
+      this.activateDeleteButton();
     },
 
     
@@ -110,7 +129,7 @@
     displayTodosOnLoad: function() {
       // Check if todos storage had any todo items
       if (this.storageHasData() === true) {
-        this.displayTodos(storage);
+        this.displayTodos(this.todos);
       }
     }
   };
