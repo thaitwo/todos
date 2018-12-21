@@ -20,14 +20,44 @@
     // Activate all event handlers
     activateEventHandlers: function() {
       this.$todosList
-      .on('dblclick', 'label', this.editTodo.bind(this))
-      .on('focusout', '.todo-edit', this.focusOnInput.bind(this))
+      .on('dblclick', 'label', this.focusOnTodoForEditing.bind(this))
+      .on('focusout', 'input.todo-edit', this.updateTodo.bind(this))
+    },
+
+
+    // Focus on todo item for editing
+    focusOnTodoForEditing: function(event) {
+      $(event.currentTarget).closest('li').addClass('editing');
+      $('.todo-edit').focus();
     },
 
     
-    focusOnInput: function(event) {
+    // Update todo item
+    updateTodo: function(event) {
+      var defaultValue = event.target.defaultValue;
+      var newValue = event.target.value;
+      var $labelElement = $(event.target).siblings('div.todo-view').find('label');
+      
+      // Update todo if value is changed
+      if (newValue !== defaultValue) {
+        // Get index of edited todo
+        var index = this.getIndex(defaultValue);
+        // Set todo value to edited value
+        var updatedTodo = {
+          task: newValue,
+          completed: false
+        }
+        this.todos.splice(index, 1, updatedTodo);
+        // Update todo in local storage
+        store.set('todos', this.todos);
+        // Display updated todos on scree
+        this.displayTodos(this.todos);
+      }
+      
+      // Remove 'editing' class from li to to display label again
+      $(event.currentTarget).closest('li').removeClass('editing');
+      // Shift focus to main input bar
       this.$todoInput.focus();
-      $(event.currentTarget).closest('li').removeClass('editing'); // fix this
     },
     
   
@@ -125,10 +155,10 @@
 
 
     // Display all todos with data provided
-    displayTodos: function(todoList) { 
+    displayTodos: function(todos) { 
       this.$todosList.empty();     
       // Display each todo item in storage on screen
-      var todos = todoList.map(function(todo) {
+      var todos = todos.map(function(todo) {
         return '<li class="todo-item">' +
           '<div class="todo-view">' +
             '<label>' + todo.task + '</label>' +
@@ -150,13 +180,6 @@
         this.displayTodos(this.todos);
       }
     },
-
-
-    // Edit todo item
-    editTodo: function(event) {
-        $(event.currentTarget).closest('li').addClass('editing');
-        $('.todo-edit').focus();
-    }
   };
 
   App.init();
