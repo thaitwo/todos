@@ -1,7 +1,10 @@
 (function(){
   var ENTER_KEY = 13;
+  var ESC_KEY = 27;
 
   var App = {
+
+    // Allow ENTER and ESC for editing
 
     init: function() {
       this.$todosList = $('#todos-list');
@@ -21,7 +24,8 @@
     activateEventHandlers: function() {
       this.$todosList
       .on('dblclick', 'label', this.focusOnTodoForEditing.bind(this))
-      .on('focusout', 'input.todo-edit', this.updateTodo.bind(this))
+      .on('blur', 'input.todo-edit', this.updateTodo.bind(this))
+      .on('keyup', 'input.todo-edit', this.updateOnEnter.bind(this))
       .on('click', 'input[type="checkbox"]', this.toggleCheckbox.bind(this))
     },
 
@@ -46,6 +50,33 @@
       $('.todo-edit').focus();
     },
 
+    // If values are different but ESC is pressed, leave value as is
+    
+
+
+    // Update todo item on keypress
+    updateOnEnter: function(event) {
+      var keyPressed = event.which || event.keyCode;
+      var defaultValue = event.target.defaultValue;
+
+      if (keyPressed === ENTER_KEY) {
+        this.$todoInput.focus();
+      }
+      if (keyPressed === ESC_KEY) {
+        // Get index of edited todo
+        var index = this.getIndex(defaultValue);
+        // Set todo value to edited value
+        this.todos[index].task = defaultValue;
+        // Update todo in local storage
+        store.set('todos', this.todos);
+        // Display updated todos on scree
+        this.displayTodos(this.todos);
+
+        // defaultValue = defaultValue;
+        // console.log(defaultValue);
+      }
+    },
+
     
     // Update todo item
     updateTodo: function(event) {
@@ -57,11 +88,7 @@
         // Get index of edited todo
         var index = this.getIndex(defaultValue);
         // Set todo value to edited value
-        var updatedTodo = {
-          task: newValue,
-          completed: false
-        }
-        this.todos.splice(index, 1, updatedTodo);
+        this.todos[index].task = newValue;
         // Update todo in local storage
         store.set('todos', this.todos);
         // Display updated todos on scree
@@ -175,7 +202,7 @@
       // Display each todo item in storage on screen
       var todos = todos.map(function(todo) {
         var isChecked;
-        
+
         if (todo.completed === true) {
           isChecked = 'checked';
         } else {
