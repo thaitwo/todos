@@ -66,6 +66,15 @@ input {
   width: 452px;
 }
 
+#todos-list input[type='checkbox'] {
+  margin-left: 0;
+  position: absolute;
+  top: 1rem;
+  left: 0;
+  height: 24px;
+  width: 24px;
+}
+
 .todo-item label {
   display: block;
   font-size: 1.3rem;

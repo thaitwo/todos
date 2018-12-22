@@ -22,6 +22,21 @@
       this.$todosList
       .on('dblclick', 'label', this.focusOnTodoForEditing.bind(this))
       .on('focusout', 'input.todo-edit', this.updateTodo.bind(this))
+      .on('click', 'input[type="checkbox"]', this.toggleCheckbox.bind(this))
+    },
+
+
+    // Toggle checkbox
+    toggleCheckbox: function(event) {
+      var isChecked = $(event.currentTarget).prop('checked');
+      var todoValue = $(event.currentTarget).siblings('label').text();
+      var index = this.getIndex(todoValue);
+      
+      
+      $(event.currentTarget).prop('checked', isChecked);
+      this.todos[index].completed = isChecked
+      store.set('todos', this.todos);
+      this.displayTodos(this.todos);
     },
 
 
@@ -36,7 +51,6 @@
     updateTodo: function(event) {
       var defaultValue = event.target.defaultValue;
       var newValue = event.target.value;
-      var $labelElement = $(event.target).siblings('div.todo-view').find('label');
       
       // Update todo if value is changed
       if (newValue !== defaultValue) {
@@ -53,7 +67,7 @@
         // Display updated todos on scree
         this.displayTodos(this.todos);
       }
-      
+
       // Remove 'editing' class from li to to display label again
       $(event.currentTarget).closest('li').removeClass('editing');
       // Shift focus to main input bar
@@ -88,6 +102,7 @@
           todoHTML =
           '<li class="todo-item">' +
             '<div class="todo-view">' +
+              '<input type="checkbox">' +
               '<label>' + todoItem.task + '</label>' +
               '<button class="delete-icon"><i class="fas fa-times fa-lg"></i></button>' +
             '</div>' +
@@ -159,8 +174,17 @@
       this.$todosList.empty();     
       // Display each todo item in storage on screen
       var todos = todos.map(function(todo) {
+        var isChecked;
+        
+        if (todo.completed === true) {
+          isChecked = 'checked';
+        } else {
+          isChecked = '';
+        }
+
         return '<li class="todo-item">' +
           '<div class="todo-view">' +
+            '<input type="checkbox"' + isChecked + '>' +
             '<label>' + todo.task + '</label>' +
             '<button class="delete-icon"><i class="fas fa-times fa-lg"></i></button>' +
           '</div>' +
