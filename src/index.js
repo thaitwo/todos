@@ -1,10 +1,12 @@
 (function(){
   var ENTER_KEY = 13;
-  var ESC_KEY = 27;
+  var ESCAPE_KEY = 27;
 
   var App = {
 
-    // Allow ENTER and ESC for editing
+    // BUG FIX
+    // Ater clicking clear all and entering new todos,
+    // editing a todo and clicking outside will display duplicates of all new todos
 
     init: function() {
       this.$todosList = $('#todos-list');
@@ -12,6 +14,7 @@
       this.$clearButton = $('#clear-button');
       this.todos = store.get('todos') || [];
       this.$deleteIcon;
+      this.escPressed;
       this.displayTodosOnLoad();
       this.getInputValue();
       this.storageHasData();
@@ -24,8 +27,8 @@
     activateEventHandlers: function() {
       this.$todosList
       .on('dblclick', 'label', this.focusOnTodoForEditing.bind(this))
-      .on('blur', 'input.todo-edit', this.updateTodo.bind(this))
       .on('keyup', 'input.todo-edit', this.updateOnEnter.bind(this))
+      .on('blur', 'input.todo-edit', this.updateAndClose.bind(this))
       .on('click', 'input[type="checkbox"]', this.toggleCheckbox.bind(this))
     },
 
@@ -35,7 +38,6 @@
       var isChecked = $(event.currentTarget).prop('checked');
       var todoValue = $(event.currentTarget).siblings('label').text();
       var index = this.getIndex(todoValue);
-      
       
       $(event.currentTarget).prop('checked', isChecked);
       this.todos[index].completed = isChecked
@@ -48,57 +50,40 @@
     focusOnTodoForEditing: function(event) {
       $(event.currentTarget).closest('li').addClass('editing');
       $('.todo-edit').focus();
-    },
-
-    // If values are different but ESC is pressed, leave value as is
-    
+    },    
 
 
     // Update todo item on keypress
     updateOnEnter: function(event) {
       var keyPressed = event.which || event.keyCode;
-      var defaultValue = event.target.defaultValue;
 
-      if (keyPressed === ENTER_KEY) {
-        this.$todoInput.focus();
+      if (keyPressed === ESCAPE_KEY) {
+        this.escPressed = true;
+        this.updateAndClose(event);
       }
-      if (keyPressed === ESC_KEY) {
-        // Get index of edited todo
-        var index = this.getIndex(defaultValue);
-        // Set todo value to edited value
-        this.todos[index].task = defaultValue;
-        // Update todo in local storage
-        store.set('todos', this.todos);
-        // Display updated todos on scree
-        this.displayTodos(this.todos);
-
-        // defaultValue = defaultValue;
-        // console.log(defaultValue);
+      if (keyPressed === ENTER_KEY) {
+        // this.escPressed = false;
+        this.updateAndClose(event);
       }
     },
 
-    
-    // Update todo item
-    updateTodo: function(event) {
+
+    updateAndClose: function(event) {
       var defaultValue = event.target.defaultValue;
       var newValue = event.target.value;
-      
-      // Update todo if value is changed
-      if (newValue !== defaultValue) {
-        // Get index of edited todo
-        var index = this.getIndex(defaultValue);
-        // Set todo value to edited value
+      var index = this.getIndex(defaultValue);
+
+      if (this.escPressed === true) {
+        this.displayTodos(this.todos);
+      } else {
         this.todos[index].task = newValue;
-        // Update todo in local storage
         store.set('todos', this.todos);
-        // Display updated todos on scree
         this.displayTodos(this.todos);
       }
 
-      // Remove 'editing' class from li to to display label again
       $(event.currentTarget).closest('li').removeClass('editing');
-      // Shift focus to main input bar
       this.$todoInput.focus();
+      this.escPressed = false;
     },
     
   
