@@ -84,6 +84,11 @@ input {
   text-align: left;
 }
 
+.todo-item label.completed {
+  color: #cccccc;
+  text-decoration: line-through;
+}
+
 .todo-item:hover .delete-icon {
   display: block;
 }

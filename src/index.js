@@ -33,60 +33,6 @@
     },
 
 
-    // Toggle checkbox
-    toggleCheckbox: function(event) {
-      var isChecked = $(event.currentTarget).prop('checked');
-      var todoValue = $(event.currentTarget).siblings('label').text();
-      var index = this.getIndex(todoValue);
-      
-      $(event.currentTarget).prop('checked', isChecked);
-      this.todos[index].completed = isChecked
-      store.set('todos', this.todos);
-      this.displayTodos(this.todos);
-    },
-
-
-    // Focus on todo item for editing
-    focusOnTodoForEditing: function(event) {
-      $(event.currentTarget).closest('li').addClass('editing');
-      $('.todo-edit').focus();
-    },    
-
-
-    // Update todo item on keypress
-    updateOnEnter: function(event) {
-      var keyPressed = event.which || event.keyCode;
-
-      if (keyPressed === ESCAPE_KEY) {
-        this.escPressed = true;
-        this.updateAndClose(event);
-      }
-      if (keyPressed === ENTER_KEY) {
-        // this.escPressed = false;
-        this.updateAndClose(event);
-      }
-    },
-
-
-    updateAndClose: function(event) {
-      var defaultValue = event.target.defaultValue;
-      var newValue = event.target.value;
-      var index = this.getIndex(defaultValue);
-
-      if (this.escPressed === true) {
-        this.displayTodos(this.todos);
-      } else {
-        this.todos[index].task = newValue;
-        store.set('todos', this.todos);
-        this.displayTodos(this.todos);
-      }
-
-      $(event.currentTarget).closest('li').removeClass('editing');
-      this.$todoInput.focus();
-      this.escPressed = false;
-    },
-    
-  
     // Retrieve input value and add to storage
     getInputValue: function() {
       var that = this;
@@ -128,6 +74,64 @@
           that.activateDeleteButton();
         }
       });
+    },
+
+
+    // Toggle checkbox
+    toggleCheckbox: function(event) {
+      var isChecked = $(event.currentTarget).prop('checked');
+      var todoValue = $(event.currentTarget).siblings('label').text();
+      var index = this.getIndex(todoValue);
+      
+      this.todos[index].completed = isChecked
+      store.set('todos', this.todos);
+      this.displayTodos(this.todos);
+    },
+
+
+    // Focus on todo item for editing
+    focusOnTodoForEditing: function(event) {
+      $(event.currentTarget).closest('li').addClass('editing');
+      $('.todo-edit').focus();
+    },    
+
+
+    // Update todo item on keypress
+    updateOnEnter: function(event) {
+      var keyPressed = event.which || event.keyCode;
+
+      if (keyPressed === ESCAPE_KEY) {
+        this.escPressed = true;
+        this.updateAndClose(event);
+      }
+      if (keyPressed === ENTER_KEY) {
+        this.updateAndClose(event);
+      }
+    },
+
+
+    // Update todo and exit edit mode
+    updateAndClose: function(event) {
+      var defaultValue = event.target.defaultValue;
+      var newValue = event.target.value;
+      var index = this.getIndex(defaultValue);
+
+      // If escape button is pressed, don't update todo
+      if (this.escPressed === true) {
+        this.displayTodos(this.todos);
+      }
+      // Otherwise, update todo
+      else {
+        this.todos[index].task = newValue;
+        store.set('todos', this.todos);
+        this.displayTodos(this.todos);
+      }
+
+      // Exit edit mode and shift focus to main input bar
+      $(event.currentTarget).closest('li').removeClass('editing');
+      this.$todoInput.focus();
+      // Set to false to allow update for future blur events
+      this.escPressed = false;
     },
 
 
@@ -187,17 +191,20 @@
       // Display each todo item in storage on screen
       var todos = todos.map(function(todo) {
         var isChecked;
+        var completed;
 
         if (todo.completed === true) {
           isChecked = 'checked';
+          completed = 'completed';
         } else {
           isChecked = '';
+          completed = '';
         }
 
         return '<li class="todo-item">' +
           '<div class="todo-view">' +
             '<input type="checkbox"' + isChecked + '>' +
-            '<label>' + todo.task + '</label>' +
+            '<label class="' + completed + '">' + todo.task + '</label>' +
             '<button class="delete-icon"><i class="fas fa-times fa-lg"></i></button>' +
           '</div>' +
           '<input class="todo-edit" value="' + todo.task + '">'+
