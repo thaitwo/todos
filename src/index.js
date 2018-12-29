@@ -4,10 +4,6 @@
 
   var App = {
 
-    // BUG FIX
-    // Ater clicking clear all and entering new todos,
-    // editing a todo and clicking outside will display duplicates of all new todos
-
     init: function() {
       this.$todosList = $('#todos-list');
       this.$todoInput = $('#todo-input');
@@ -120,16 +116,26 @@
       if (this.escPressed === true) {
         this.displayTodos(this.todos);
       }
+      // If edited todo is empty string, remove todo
+      else if (newValue === '') {
+        this.todos.splice(index, 1);
+        store.set('todos', this.todos);
+        this.$todoInput.focus();
+        this.displayTodos(this.todos);
+      }
       // Otherwise, update todo
       else {
+        // this.$todosInput.focus() placed before displayTodos to prevent
+        // trigger of blur event which will rerun this entire function
+        this.$todoInput.focus();
         this.todos[index].task = newValue;
         store.set('todos', this.todos);
         this.displayTodos(this.todos);
       }
 
-      // Exit edit mode and shift focus to main input bar
+      // Exit edit mode
       $(event.currentTarget).closest('li').removeClass('editing');
-      this.$todoInput.focus();
+      
       // Set to false to allow update for future blur events
       this.escPressed = false;
     },
@@ -137,13 +143,17 @@
 
     // Clear all todo items on button click
     activateClearButton: function() {
-      var that = this;
-
       this.$clearButton.on('click', function(event) {
         event.preventDefault();
-        store.set('todos', []);
-        that.$todosList.empty();
-      })
+        // Set this.todos to empty array to erase all data.
+        // store.set('todos', []) will not erase this.todos
+        // but instead display duplicate list on screen when
+        // a new todo is created after pressing clear all button
+        this.todos = [];
+        store.set('todos', this.todos);
+
+        this.$todosList.empty();
+      }.bind(this))
     },
 
     
@@ -187,7 +197,6 @@
 
     // Display all todos with data provided
     displayTodos: function(todos) { 
-      this.$todosList.empty();     
       // Display each todo item in storage on screen
       var todos = todos.map(function(todo) {
         var isChecked;
@@ -210,6 +219,7 @@
           '<input class="todo-edit" value="' + todo.task + '">'+
         '</li>';
       });
+      this.$todosList.empty();
       this.$todosList.append(todos);
       this.$deleteIcon = $('.delete-icon');
       this.activateDeleteButton();
