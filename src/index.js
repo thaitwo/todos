@@ -4,6 +4,10 @@
 
   var App = {
 
+    // BUG FIX
+    // Editing todo to empty string will remove two items when it should be one
+    // Pressing enter still removes two items
+
     init: function() {
       this.$todosList = $('#todos-list');
       this.$todoInput = $('#todo-input');
@@ -98,10 +102,10 @@
 
       if (keyPressed === ESCAPE_KEY) {
         this.escPressed = true;
-        this.updateAndClose(event);
+        this.$todoInput.focus(); // this will trigger updateAndClose()
       }
       if (keyPressed === ENTER_KEY) {
-        this.updateAndClose(event);
+        this.$todoInput.focus(); // this will trigger updateAndClose()
       }
     },
 
@@ -109,7 +113,7 @@
     // Update todo and exit edit mode
     updateAndClose: function(event) {
       var defaultValue = event.target.defaultValue;
-      var newValue = event.target.value;
+      var newValue = event.target.value.trim();
       var index = this.getIndex(defaultValue);
 
       // If escape button is pressed, don't update todo
@@ -118,9 +122,9 @@
       }
       // If edited todo is empty string, remove todo
       else if (newValue === '') {
+        this.$todoInput.focus();
         this.todos.splice(index, 1);
         store.set('todos', this.todos);
-        this.$todoInput.focus();
         this.displayTodos(this.todos);
       }
       // Otherwise, update todo
