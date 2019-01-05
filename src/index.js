@@ -4,10 +4,6 @@
 
   var App = {
 
-    // BUG FIX
-    // Editing todo to empty string will remove two items when it should be one
-    // Pressing enter still removes two items
-
     init: function() {
       this.$todosList = $('#todos-list');
       this.$todoInput = $('#todo-input');
