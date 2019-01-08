@@ -1,3 +1,5 @@
+import './scss/style.scss'; // Import scss file for webpack to compile
+
 (function(){
   var ENTER_KEY = 13;
   var ESCAPE_KEY = 27;
