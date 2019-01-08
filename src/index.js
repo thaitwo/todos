@@ -1,4 +1,6 @@
 import './scss/style.scss'; // Import scss file for webpack to compile
+var $ = require("jquery");
+var store =  require("store2");
 
 (function(){
   var ENTER_KEY = 13;
@@ -18,6 +20,7 @@ import './scss/style.scss'; // Import scss file for webpack to compile
       this.storageHasData();
       this.activateEventHandlers();
       this.activateClearButton();
+      this.disableNewTodoInput();
     },
 
 
@@ -55,7 +58,7 @@ import './scss/style.scss'; // Import scss file for webpack to compile
           // Clear input field
           that.$todoInput.val('');
           // Make todo an HTML element
-          todoHTML =
+          var todoHTML =
           '<li class="todo-item">' +
             '<div class="todo-view">' +
               '<input type="checkbox">' +
@@ -70,6 +73,7 @@ import './scss/style.scss'; // Import scss file for webpack to compile
           // Make "Clear All" button visible
           that.$clearButton.addClass('is-visible');
           that.activateDeleteButton();
+          that.disableNewTodoInput();
         }
       });
     },
@@ -100,10 +104,18 @@ import './scss/style.scss'; // Import scss file for webpack to compile
 
       if (keyPressed === ESCAPE_KEY) {
         this.escPressed = true;
-        this.$todoInput.focus(); // this will trigger updateAndClose()
+        if (this.todos.length < 3) {
+          this.$todoInput.focus(); // this will trigger updateAndClose()
+        } else {
+          $(event.target).blur();
+        }
       }
       if (keyPressed === ENTER_KEY) {
-        this.$todoInput.focus(); // this will trigger updateAndClose()
+        if (this.todos.length < 3) {
+          this.$todoInput.focus(); // this will trigger updateAndClose()
+        } else {
+          $(event.target).blur();
+        }
       }
     },
 
@@ -187,6 +199,7 @@ import './scss/style.scss'; // Import scss file for webpack to compile
         store.set('todos', that.todos);
         // Display todos
         that.displayTodos(that.todos);
+        that.disableNewTodoInput();
       })
     },
 
@@ -225,6 +238,20 @@ import './scss/style.scss'; // Import scss file for webpack to compile
       this.$todosList.append(todos);
       this.$deleteIcon = $('.delete-icon');
       this.activateDeleteButton();
+    },
+
+
+    // Disable new todo input if todos length equals 3
+    disableNewTodoInput: function() {
+      var todosLength = this.todos.length;
+
+      if (todosLength === 3) {
+        this.$todoInput.prop('disabled', true);
+        this.$todoInput.addClass('disabled');
+      } else {
+        this.$todoInput.prop('disabled', false);
+        this.$todoInput.removeClass('disabled');
+      }
     },
 
     
