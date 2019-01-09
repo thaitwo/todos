@@ -9,6 +9,7 @@ var store =  require("store2");
   var App = {
 
     init: function() {
+      this.$appContainer = $('#app-container');
       this.$todosList = $('#todos-list');
       this.$todoInput = $('#todo-input');
       this.$clearButton = $('#clear-button');
@@ -167,7 +168,10 @@ var store =  require("store2");
         store.set('todos', this.todos);
 
         this.$todosList.empty();
-      }.bind(this))
+        this.$clearButton.removeClass('is-visible');
+        this.disableNewTodoInput();
+        this.$todoInput.focus();
+      }.bind(this));
     },
 
     
@@ -236,7 +240,9 @@ var store =  require("store2");
       });
       this.$todosList.empty();
       this.$todosList.append(todos);
+      this.$clearButton.addClass('is-visible');
       this.$deleteIcon = $('.delete-icon');
+      this.$clearButton = $('#clear-button');
       this.activateDeleteButton();
     },
 

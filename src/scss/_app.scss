@@ -10,14 +10,24 @@ body {
   }
   
   #clear-button {
+    background-color: #cccccc;
+    border: none;
+    border-radius: 3px;
+    display: none;
+    line-height: 32px;
     margin: auto;
+    padding: 0 16px;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
   
   .is-visible {
     display: block !important;
   }
   
-  .app-container {
+  #app-container {
     padding-top: 80px;
     text-align: center;
   }
@@ -59,6 +69,10 @@ body {
   .todo-item {
     border-bottom: 1px solid #eeeeee;
     position: relative;
+
+    &:hover .delete-icon {
+      display: block;
+    }
   }
   
   #todos-list li input {
@@ -93,12 +107,7 @@ body {
     text-decoration: line-through;
   }
   
-  .todo-item:hover .delete-icon {
-    display: block;
-  }
-  
   .delete-icon {
-    background-color: #eeeeee;
     border: none;
     border-radius: .2rem;
     display: none;
@@ -109,11 +118,8 @@ body {
   }
   
   .delete-icon:hover {
+    background-color: #eeeeee;
     cursor: pointer;
-  }
-  
-  .delete-icon:hover i {
-    color: #000000;
   }
   
   .delete-icon i {
