@@ -64,7 +64,7 @@ var store =  require("store2");
             '<div class="todo-view">' +
               '<input type="checkbox">' +
               '<label>' + todoItem.task + '</label>' +
-              '<button class="delete-icon"><i class="fas fa-times fa-lg"></i></button>' +
+              '<button class="delete-icon"><i class="fas fa-trash-alt fa-lg"></i></button>' +
             '</div>' +
             '<input class="todo-edit" value="' + todoItem.task + '">'+
           '</li>';
@@ -168,7 +168,7 @@ var store =  require("store2");
         store.set('todos', this.todos);
 
         this.$todosList.empty();
-        this.$clearButton.removeClass('is-visible');
+        this.toggleClearButton();
         this.disableNewTodoInput();
         this.$todoInput.focus();
       }.bind(this));
@@ -181,6 +181,18 @@ var store =  require("store2");
         if (this.todos[i].task === task) {
           return i;
         }
+      }
+    },
+
+
+    // Toggle Clear All Button
+    toggleClearButton: function() {
+      var todosLength = this.todos.length;
+
+      if (todosLength === 3) {
+        this.$clearButton.addClass('is-visible');
+      } else if (todosLength === 0) {
+        this.$clearButton.removeClass('is-visible');
       }
     },
 
@@ -204,6 +216,7 @@ var store =  require("store2");
         // Display todos
         that.displayTodos(that.todos);
         that.disableNewTodoInput();
+        that.toggleClearButton();
       })
     },
 
@@ -233,14 +246,14 @@ var store =  require("store2");
           '<div class="todo-view">' +
             '<input type="checkbox"' + isChecked + '>' +
             '<label class="' + completed + '">' + todo.task + '</label>' +
-            '<button class="delete-icon"><i class="fas fa-times fa-lg"></i></button>' +
+            '<button class="delete-icon"><i class="fas fa-trash-alt fa-lg"></i></button>' +
           '</div>' +
           '<input class="todo-edit" value="' + todo.task + '">'+
         '</li>';
       });
       this.$todosList.empty();
       this.$todosList.append(todos);
-      this.$clearButton.addClass('is-visible');
+      this.toggleClearButton();
       this.$deleteIcon = $('.delete-icon');
       this.$clearButton = $('#clear-button');
       this.activateDeleteButton();
@@ -257,6 +270,7 @@ var store =  require("store2");
       } else {
         this.$todoInput.prop('disabled', false);
         this.$todoInput.removeClass('disabled');
+        this.$todoInput.focus();
       }
     },
 

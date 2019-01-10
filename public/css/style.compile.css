@@ -1,6 +1,9 @@
 body {
-  background-color: #ffffff;
+  background-image: linear-gradient(120deg, #C54365 0%, #B64657 100%);
   font-family: Arial, Helvetica, sans-serif; }
+
+h2 {
+  color: #ffffff; }
 
 input {
   font-family: Arial, Helvetica, sans-serif;
@@ -25,22 +28,30 @@ input {
   text-align: center; }
 
 #todo-input {
-  border-radius: 4px;
-  border: 1px solid #eeeeee;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   box-sizing: border-box;
+  color: #ffffff;
   line-height: 48px;
   height: 48px;
   outline: none;
+  margin-bottom: 2rem;
   padding: 0 12px;
+  text-align: center;
   width: 500px; }
   #todo-input.disabled {
-    background-color: #eeeeee; }
+    visibility: hidden; }
+
+::placeholder {
+  color: #ffffff;
+  opacity: .2; }
 
 #todos-list {
   list-style-type: none;
   margin-left: auto;
   margin-right: auto;
-  max-width: 500px;
+  max-width: 800px;
   padding-left: 0;
   position: relative;
   width: 100%; }
@@ -53,32 +64,39 @@ input {
   display: block; }
 
 .todo-item {
-  border-bottom: 1px solid #eeeeee;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12), 0 4px 12px rgba(0, 0, 0, 0.12);
+  margin-bottom: 16px;
+  padding: 20px 24px;
   position: relative; }
   .todo-item:hover .delete-icon {
     display: block; }
 
+.todo-view {
+  position: relative; }
+
 #todos-list li input {
   border: none;
   box-sizing: border-box;
-  line-height: 48px;
+  line-height: 40px;
   margin: 0 0 0 3rem;
   padding: 0 1rem;
   width: 452px; }
 
-#todos-list input[type='checkbox'] {
+#todos-list input[type="checkbox"] {
   margin-left: 0;
   position: absolute;
-  top: 1rem;
   left: 0;
-  height: 24px;
-  width: 24px; }
+  top: .25rem;
+  height: 32px;
+  width: 32px; }
 
 .todo-item label {
   display: block;
   font-size: 1.3rem;
   margin: 0 0 0 3rem;
-  line-height: 48px;
+  line-height: 40px;
   padding: 0 1rem;
   text-align: left; }
 
@@ -87,13 +105,13 @@ input {
   text-decoration: line-through; }
 
 .delete-icon {
+  background-color: #eeeeee;
   border: none;
-  border-radius: .2rem;
-  display: none;
-  padding: .5rem;
+  border-radius: .3rem;
+  padding: .7rem .6rem;
   position: absolute;
-  top: .7rem;
-  right: .5rem; }
+  top: .25rem;
+  right: 0; }
 
 .delete-icon:hover {
   background-color: #eeeeee;
