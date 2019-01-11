@@ -1,6 +1,7 @@
 import './scss/style.scss'; // Import scss file for webpack to compile
 var $ = require("jquery");
 var store =  require("store2");
+import { Sortable } from '@shopify/draggable';
 
 (function(){
   var ENTER_KEY = 13;
@@ -16,6 +17,9 @@ var store =  require("store2");
       this.todos = store.get('todos') || [];
       this.$deleteIcon;
       this.escPressed;
+      this.sortableList = new Sortable(document.querySelectorAll('#todos-list'), {
+        draggable: 'li'
+      });
       this.displayTodosOnLoad();
       this.getInputValue();
       this.storageHasData();
@@ -58,19 +62,7 @@ var store =  require("store2");
           store.set('todos', that.todos);
           // Clear input field
           that.$todoInput.val('');
-          // Make todo an HTML element
-          var todoHTML =
-          '<li class="todo-item">' +
-            '<div class="todo-view">' +
-              '<input type="checkbox">' +
-              '<label>' + todoItem.task + '</label>' +
-              '<button class="delete-icon"><i class="fas fa-trash-alt fa-lg"></i></button>' +
-            '</div>' +
-            '<input class="todo-edit" value="' + todoItem.task + '">'+
-          '</li>';
-          // Append input value
-          that.$todosList.append(todoHTML);
-          that.$deleteIcon = $('.delete-icon');
+          that.displayTodos(that.todos);
           // Make "Clear All" button visible
           that.$clearButton.addClass('is-visible');
           that.activateDeleteButton();
@@ -189,7 +181,7 @@ var store =  require("store2");
     toggleClearButton: function() {
       var todosLength = this.todos.length;
 
-      if (todosLength === 3) {
+      if (todosLength > 0) {
         this.$clearButton.addClass('is-visible');
       } else if (todosLength === 0) {
         this.$clearButton.removeClass('is-visible');
@@ -253,10 +245,32 @@ var store =  require("store2");
       });
       this.$todosList.empty();
       this.$todosList.append(todos);
+      
       this.toggleClearButton();
       this.$deleteIcon = $('.delete-icon');
       this.$clearButton = $('#clear-button');
       this.activateDeleteButton();
+      this.activateSortableList();
+    },
+
+
+    // Allow list item order to be sortable
+    activateSortableList: function() {
+      this.sortableList.on('sortable:stop', function(sortableEvent) {
+        var oldIndex = sortableEvent.oldIndex;
+        var newIndex = sortableEvent.newIndex;
+        var sortedItem = this.todos[oldIndex];
+        console.log(oldIndex, newIndex);
+        console.log('sorted item: ', sortedItem);
+
+        if (newIndex !== oldIndex) {
+          this.todos.splice(oldIndex, 1);
+          this.todos.splice((newIndex - 1), 0, sortedItem);
+          
+          store.set('todos', this.todos);
+          console.log(this.todos);
+        }
+      }.bind(this));
     },
 
 
