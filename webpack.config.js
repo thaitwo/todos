@@ -7,19 +7,22 @@ const extractSass = new ExtractTextPlugin({
 });
 
 module.exports = {
+  mode: 'development',
   context: path.resolve(__dirname, 'src'),
   entry: {
-    app: './index.js',
+    app: './js/index.js',
   },
   output: {
-    path: path.resolve(__dirname, 'public'),
+    path: path.resolve(__dirname, 'dist'),
     filename: 'js/[name].compile.js',
   },
   resolve: {
     extensions: ['.js', '.json']
   },
   devServer: {
-    contentBase: path.resolve(__dirname, './'),
+    contentBase: './',
+    compress: true,
+    port: 8000
   },
   module: {
     rules: [{

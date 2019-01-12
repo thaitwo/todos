@@ -1,4 +1,4 @@
-import './scss/style.scss'; // Import scss file for webpack to compile
+import '../scss/style.scss'; // Import scss file for webpack to compile
 var $ = require("jquery");
 var store =  require("store2");
 import { Sortable } from '@shopify/draggable';
@@ -25,7 +25,7 @@ import { Sortable } from '@shopify/draggable';
       this.storageHasData();
       this.activateEventHandlers();
       this.activateClearButton();
-      this.disableNewTodoInput();
+      // this.disableNewTodoInput();
     },
 
 
@@ -66,7 +66,7 @@ import { Sortable } from '@shopify/draggable';
           // Make "Clear All" button visible
           that.$clearButton.addClass('is-visible');
           that.activateDeleteButton();
-          that.disableNewTodoInput();
+          // that.disableNewTodoInput();
         }
       });
     },
@@ -161,7 +161,7 @@ import { Sortable } from '@shopify/draggable';
 
         this.$todosList.empty();
         this.toggleClearButton();
-        this.disableNewTodoInput();
+        // this.disableNewTodoInput();
         this.$todoInput.focus();
       }.bind(this));
     },
@@ -207,7 +207,7 @@ import { Sortable } from '@shopify/draggable';
         store.set('todos', that.todos);
         // Display todos
         that.displayTodos(that.todos);
-        that.disableNewTodoInput();
+        // that.disableNewTodoInput();
         that.toggleClearButton();
       })
     },
@@ -256,20 +256,23 @@ import { Sortable } from '@shopify/draggable';
 
     // Allow list item order to be sortable
     activateSortableList: function() {
+      console.log('hey');
       this.sortableList.on('sortable:stop', function(sortableEvent) {
         var oldIndex = sortableEvent.oldIndex;
         var newIndex = sortableEvent.newIndex;
         var sortedItem = this.todos[oldIndex];
-        console.log(oldIndex, newIndex);
-        console.log('sorted item: ', sortedItem);
+        // console.log(oldIndex, newIndex);
+        // console.log('sorted item: ', sortedItem);
+        // console.log(sortableEvent);
 
-        if (newIndex !== oldIndex) {
+        // if (newIndex !== oldIndex) {
           this.todos.splice(oldIndex, 1);
-          this.todos.splice((newIndex - 1), 0, sortedItem);
-          
+          console.log('removed', this.todos);
+          this.todos.splice(newIndex, 0, sortedItem);
+          console.log('added', this.todos);
           store.set('todos', this.todos);
-          console.log(this.todos);
-        }
+          // console.log(this.todos);
+        // }
       }.bind(this));
     },
 
