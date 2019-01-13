@@ -256,23 +256,16 @@ import { Sortable } from '@shopify/draggable';
 
     // Allow list item order to be sortable
     activateSortableList: function() {
-      console.log('hey');
       this.sortableList.on('sortable:stop', function(sortableEvent) {
         var oldIndex = sortableEvent.oldIndex;
         var newIndex = sortableEvent.newIndex;
         var sortedItem = this.todos[oldIndex];
-        // console.log(oldIndex, newIndex);
-        // console.log('sorted item: ', sortedItem);
-        // console.log(sortableEvent);
 
-        // if (newIndex !== oldIndex) {
+        if (newIndex !== oldIndex) {
           this.todos.splice(oldIndex, 1);
-          console.log('removed', this.todos);
           this.todos.splice(newIndex, 0, sortedItem);
-          console.log('added', this.todos);
           store.set('todos', this.todos);
-          // console.log(this.todos);
-        // }
+        }
       }.bind(this));
     },
 

@@ -1,5 +1,5 @@
 body {
-  // background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+  background-image: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
   background-image: linear-gradient(120deg, $deep-orange-400 0%, $deep-orange-800 100%);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -67,6 +67,7 @@ input {
   margin-left: auto;
   margin-right: auto;
   max-width: 800px;
+  outline: none;
   padding-left: 0;
   position: relative;
   width: 100%;
@@ -83,10 +84,12 @@ input {
 
 .todo-item {
   background-color: $white;
+  border: 3px solid transparent;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0,0,0,.12), 0 4px 12px rgba(0,0,0,.12);
   box-sizing: border-box;
   margin-bottom: 16px;
+  outline: none;
   padding: 20px 24px;
   position: relative;
   width: 800px;
@@ -144,7 +147,7 @@ input {
   transition: all .2s;
 
   &:hover {
-    background-color: $deep-orange-400;
+    background-color: $deep-orange-600;
     cursor: pointer;
 
     i {

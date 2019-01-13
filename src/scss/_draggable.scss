@@ -1,0 +1,13 @@
+
+
+.draggable-container--is-dragging {
+
+  .draggable-source--is-dragging {
+    border: 3px dashed rgba($color: $blue-700, $alpha: 1);
+  }
+
+  .draggable-mirror {
+    background-color: $blue-700;
+    color: $white;
+  }
+}
