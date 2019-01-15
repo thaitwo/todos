@@ -14,13 +14,16 @@ import { Sortable } from '@shopify/draggable';
       this.$todosList = $('#todos-list');
       this.$todoInput = $('#todo-input');
       this.$clearButton = $('#clear-button');
+      this.$completedTodoContainer = $('#completed-todos');
       this.todos = store.get('todos') || [];
+      this.completedTodos = store.get('completed-todos') || [];
       this.$deleteIcon;
       this.escPressed;
       this.sortableList = new Sortable(document.querySelectorAll('#todos-list'), {
         draggable: 'li'
       });
       this.displayTodosOnLoad();
+      
       this.getInputValue();
       this.storageHasData();
       this.activateEventHandlers();
@@ -69,18 +72,6 @@ import { Sortable } from '@shopify/draggable';
           // that.disableNewTodoInput();
         }
       });
-    },
-
-
-    // Toggle checkbox
-    toggleCheckbox: function(event) {
-      var isChecked = $(event.currentTarget).prop('checked');
-      var todoValue = $(event.currentTarget).siblings('label').text();
-      var index = this.getIndex(todoValue);
-      
-      this.todos[index].completed = isChecked
-      store.set('todos', this.todos);
-      this.displayTodos(this.todos);
     },
 
 
@@ -191,25 +182,70 @@ import { Sortable } from '@shopify/draggable';
     
     // Delete todo item on icon click
     activateDeleteButton: function() {
-      var that = this;
-
       this.$deleteIcon.on('click', function(event) {
         event.preventDefault();
         // Get name of todo item
         var task = event.currentTarget.parentElement.textContent;
         // Get index for clicked item
-        var index = that.getIndex(task);
+        var index = this.getIndex(task);
+    
         // Remove item from list based on index
         if (index > -1) {
-          that.todos.splice(index, 1);
+          this.todos.splice(index, 1);
         }
         // Update local storage
-        store.set('todos', that.todos);
+        store.set('todos', this.todos);
         // Display todos
-        that.displayTodos(that.todos);
-        // that.disableNewTodoInput();
-        that.toggleClearButton();
-      })
+        this.displayTodos(this.todos);
+        // this.disableNewTodoInput();
+        this.toggleClearButton();
+      }.bind(this));
+    },
+
+
+    // Toggle checkbox
+    toggleCheckbox: function(event) {
+      var isChecked = $(event.currentTarget).prop('checked');
+      var todoValue = $(event.currentTarget).siblings('label').text();
+      var index = this.getIndex(todoValue);
+      var todo = this.todos[index];
+      
+      this.todos[index].completed = isChecked
+
+      // If item is checked, remove item from todos list and add to completed todos list
+      if (isChecked === true) {
+        this.todos.splice(index, 1);
+        this.completedTodos.push(todo);
+      }
+
+      store.set('todos', this.todos);
+      store.set('completed-todos', this.completedTodos);
+      this.displayTodos(this.todos);
+      this.displayCompletedTodos(this.completedTodos);
+    },
+
+
+    // Add todo item to completed todos list
+    displayCompletedTodos: function(completedTodos) {
+      var completedTodosHTML = completedTodos.map(function(todo) {
+        var isChecked;
+        var completed;
+
+        if (todo.completed === true) {
+          isChecked = 'checked';
+          completed = 'completed';
+        } else {
+          isChecked = '';
+          completed = '';
+        }
+
+        return '<li class="todo-item-completed">' +
+            '<input type="checkbox"' + isChecked + '>' +
+            '<label class="' + completed + '">' + todo.task + '</label>' +
+          '</li>';
+      });
+      this.$completedTodoContainer.empty();
+      this.$completedTodoContainer.append(completedTodosHTML);
     },
 
 
@@ -240,7 +276,7 @@ import { Sortable } from '@shopify/draggable';
             '<label class="' + completed + '">' + todo.task + '</label>' +
             '<button class="delete-icon"><i class="fas fa-trash-alt fa-lg"></i></button>' +
           '</div>' +
-          '<input class="todo-edit" value="' + todo.task + '">'+
+          '<input class="todo-edit" value="' + todo.task + '">' +
         '</li>';
       });
       this.$todosList.empty();
@@ -290,6 +326,11 @@ import { Sortable } from '@shopify/draggable';
       // Check if todos storage had any todo items
       if (this.storageHasData() === true) {
         this.displayTodos(this.todos);
+      }
+
+      // Check if completed todos storage had any todo items
+      if (this.completedTodos.length > 0) {
+        this.displayCompletedTodos(this.completedTodos);
       }
     },
   };
