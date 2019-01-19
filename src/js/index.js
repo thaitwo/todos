@@ -40,6 +40,31 @@ import { Sortable } from '@shopify/draggable';
       .on('keyup', 'input.todo-edit', this.updateOnEnter.bind(this))
       .on('blur', 'input.todo-edit', this.updateAndClose.bind(this))
       .on('click', 'input.checkbox', this.toggleCheckbox.bind(this))
+
+      this.$completedTodosContainer.on('click', 'input', this.toggleCompletedTodos.bind(this))
+    },
+
+
+    // Add completed todo item back to todo list if checkbox gets unchecked
+    toggleCompletedTodos: function(event) {
+      event.preventDefault();
+      var isChecked = $(event.currentTarget).prop('checked');
+      var completedTodoValue = $(event.currentTarget).siblings('label').text();
+      var index = this.getIndex(completedTodoValue, this.completedTodos);
+      var completedTodo = this.completedTodos[index];
+      
+      this.completedTodos[index].completed = isChecked
+
+      // If item is checked, remove item from todos list and add to completed todos list
+      if (isChecked === false) {
+        this.completedTodos.splice(index, 1);
+        this.todos.push(completedTodo);
+      }
+
+      store.set('todos', this.todos);
+      store.set('completed-todos', this.completedTodos);
+      this.displayTodos(this.todos);
+      this.displayCompletedTodos(this.completedTodos);
     },
 
 
@@ -109,7 +134,7 @@ import { Sortable } from '@shopify/draggable';
     updateAndClose: function(event) {
       var defaultValue = event.target.defaultValue;
       var newValue = event.target.value.trim();
-      var index = this.getIndex(defaultValue);
+      var index = this.getIndex(defaultValue, this.todos);
 
       // If escape button is pressed, don't update todo
       if (this.escPressed === true) {
@@ -178,9 +203,9 @@ import { Sortable } from '@shopify/draggable';
 
     
     // Retrieve index for selected todo item 
-    getIndex: function(task) {
-      for (var i = 0; i < this.todos.length; i++) {
-        if (this.todos[i].task === task) {
+    getIndex: function(task, arrayList) {
+      for (var i = 0; i < arrayList.length; i++) {
+        if (arrayList[i].task === task) {
           return i;
         }
       }
@@ -213,7 +238,7 @@ import { Sortable } from '@shopify/draggable';
         // Get name of todo item
         var task = event.currentTarget.parentElement.textContent;
         // Get index for clicked item
-        var index = this.getIndex(task);
+        var index = this.getIndex(task, this.todos);
     
         // Remove item from list based on index
         if (index > -1) {
@@ -232,10 +257,9 @@ import { Sortable } from '@shopify/draggable';
     // Toggle checkbox
     toggleCheckbox: function(event) {
       event.preventDefault();
-      console.log('clicked');
       var isChecked = $(event.currentTarget).prop('checked');
       var todoValue = $(event.currentTarget).siblings('label').text();
-      var index = this.getIndex(todoValue);
+      var index = this.getIndex(todoValue, this.todos);
       var todo = this.todos[index];
       
       this.todos[index].completed = isChecked
@@ -255,7 +279,6 @@ import { Sortable } from '@shopify/draggable';
 
     // Add todo item to completed todos list
     displayCompletedTodos: function(completedTodos) {
-      console.log(this.completedTodos.length);
       if (this.completedTodos.length === 0) {
         this.$completedTodosContainer.empty();
         return;
@@ -274,7 +297,7 @@ import { Sortable } from '@shopify/draggable';
         }
 
         return '<li class="todo-item-completed">' +
-            '<input type="checkbox"' + isChecked + '>' +
+            '<input class="checkbox" type="checkbox"' + isChecked + '>' +
             '<label class="' + completed + '">' + todo.task + '</label>' +
           '</li>';
       });
@@ -286,7 +309,6 @@ import { Sortable } from '@shopify/draggable';
 
     // Display all todos with data provided
     displayTodos: function(todos) { 
-      console.log(this.todos.length);
       if (this.todos.length === 0) {
         this.$todosList.empty();
         return;
