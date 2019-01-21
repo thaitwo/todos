@@ -13,6 +13,7 @@ import { Sortable } from '@shopify/draggable';
       this.$appContainer = $('#app-container');
       this.$todosList = $('#todos-list');
       this.$todoInput = $('#todo-input');
+      this.$clearInputButton = $('#clear-input-button');
       this.$clearButton = $('#clear-button');
       this.$clearCompletedButton = $('#clear-completed-button');
       this.$completedTodosContainer = $('#completed-todos');
@@ -24,7 +25,6 @@ import { Sortable } from '@shopify/draggable';
         draggable: 'li'
       });
       this.displayTodosOnLoad();
-      
       this.getInputValue();
       this.activateEventHandlers();
       this.activateClearButton();
@@ -35,36 +35,32 @@ import { Sortable } from '@shopify/draggable';
 
     // Activate all event handlers
     activateEventHandlers: function() {
+      this.$todoInput.on('keyup', this.toggleClearInputButton.bind(this));
+      this.$clearInputButton.on('click', this.clearInputValue.bind(this));
       this.$todosList
       .on('dblclick', 'label', this.focusOnTodoForEditing.bind(this))
       .on('keyup', 'input.todo-edit', this.updateOnEnter.bind(this))
       .on('blur', 'input.todo-edit', this.updateAndClose.bind(this))
-      .on('click', 'input.checkbox', this.toggleCheckbox.bind(this))
-
-      this.$completedTodosContainer.on('click', 'input', this.toggleCompletedTodos.bind(this))
+      .on('click', 'input.checkbox', this.toggleCheckbox.bind(this));
+      this.$completedTodosContainer.on('click', 'input', this.toggleCompletedTodos.bind(this));
     },
 
 
-    // Add completed todo item back to todo list if checkbox gets unchecked
-    toggleCompletedTodos: function(event) {
-      event.preventDefault();
-      var isChecked = $(event.currentTarget).prop('checked');
-      var completedTodoValue = $(event.currentTarget).siblings('label').text();
-      var index = this.getIndex(completedTodoValue, this.completedTodos);
-      var completedTodo = this.completedTodos[index];
-      
-      this.completedTodos[index].completed = isChecked
-
-      // If item is checked, remove item from todos list and add to completed todos list
-      if (isChecked === false) {
-        this.completedTodos.splice(index, 1);
-        this.todos.push(completedTodo);
+    // Toggle clear input button
+    toggleClearInputButton: function() {
+      if (this.$todoInput.val()) {
+        this.$clearInputButton.addClass('is-visible');
+      } else {
+        this.$clearInputButton.removeClass('is-visible');
       }
+    },
 
-      store.set('todos', this.todos);
-      store.set('completed-todos', this.completedTodos);
-      this.displayTodos(this.todos);
-      this.displayCompletedTodos(this.completedTodos);
+
+    // Clear input value
+    clearInputValue: function() {
+      this.$todoInput.val('');
+      this.$todoInput.focus();
+      this.$clearInputButton.removeClass('is-visible');
     },
 
 
@@ -268,6 +264,29 @@ import { Sortable } from '@shopify/draggable';
       if (isChecked === true) {
         this.todos.splice(index, 1);
         this.completedTodos.push(todo);
+      }
+
+      store.set('todos', this.todos);
+      store.set('completed-todos', this.completedTodos);
+      this.displayTodos(this.todos);
+      this.displayCompletedTodos(this.completedTodos);
+    },
+
+
+    // Add completed todo item back to todo list if checkbox gets unchecked
+    toggleCompletedTodos: function(event) {
+      event.preventDefault();
+      var isChecked = $(event.currentTarget).prop('checked');
+      var completedTodoValue = $(event.currentTarget).siblings('label').text();
+      var index = this.getIndex(completedTodoValue, this.completedTodos);
+      var completedTodo = this.completedTodos[index];
+      
+      this.completedTodos[index].completed = isChecked
+
+      // If item is checked, remove item from todos list and add to completed todos list
+      if (isChecked === false) {
+        this.completedTodos.splice(index, 1);
+        this.todos.push(completedTodo);
       }
 
       store.set('todos', this.todos);

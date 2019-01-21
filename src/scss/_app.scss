@@ -39,6 +39,36 @@ input {
   text-align: center;
 }
 
+.input-container {
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  width: 500px;
+}
+
+#clear-input-button {
+  background-color: transparent;
+  border: 0;
+  display: none;
+  outline: none;
+  position: absolute;
+  top: 14px;
+  right: 0;
+
+  i {
+    color: rgba($black, .2);
+    font-size: 16px;
+  }
+
+  &:hover {
+    cursor: pointer;
+
+    i {
+      color: rgba($black, .4);
+    }
+  }
+}
+
 #todo-input {
   background-color: transparent;
   border: none;
