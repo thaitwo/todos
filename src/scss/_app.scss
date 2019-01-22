@@ -14,13 +14,15 @@ input {
 }
 
 #clear-button,
-#clear-completed-button {
+#clear-completed-button,
+#hide-show-completed-button {
   background-color: transparent;
   border: none;
   border-radius: 3px;
   display: none;
   line-height: 28px;
   margin: auto;
+  outline: none;
   padding: 0 12px;
   text-decoration: underline;
 
