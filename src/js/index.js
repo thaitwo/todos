@@ -20,10 +20,12 @@ import { Sortable } from '@shopify/draggable';
       this.$completedTodosContainer = $('#completed-todos');
       this.todos = store.get('todos') || [];
       this.completedTodos = store.get('completed-todos') || [];
+      this.$draggableIcon
       this.$deleteIcon;
       this.escPressed;
       this.sortableList = new Sortable(document.querySelectorAll('#todos-list'), {
-        draggable: 'li'
+        draggable: 'li',
+        handle: '.draggable-icon'
       });
       this.displayTodosOnLoad();
       this.getInputValue();
@@ -212,7 +214,7 @@ import { Sortable } from '@shopify/draggable';
 
     // Toggle hide/show button for completed todos
     toggleHideShowButton: function() {
-      this.$completedTodosContainer.toggleClass('is-hidden');
+      this.$completedTodosContainer.slideToggle();
     },
 
 
@@ -360,7 +362,10 @@ import { Sortable } from '@shopify/draggable';
           '<div class="todo-view">' +
             '<input class="checkbox" type="checkbox"' + isChecked + '>' +
             '<label class="' + completed + '">' + todo.task + '</label>' +
-            '<button class="delete-icon"><i class="fas fa-trash-alt fa-lg"></i></button>' +
+            '<div class="todo-item-icon-container">' +
+              '<span class="icon draggable-icon"><i class="fas fa-bars"></i></span>' +
+              '<button class="icon delete-icon"><i class="fas fa-trash-alt"></i></button>' +
+            '</div>' +
           '</div>' +
           '<input class="todo-edit" value="' + todo.task + '">' +
         '</li>';
@@ -370,6 +375,7 @@ import { Sortable } from '@shopify/draggable';
       this.$todosList.append(todos);
       
       this.toggleClearButton();
+      this.$draggableIcon = $('.draggable-icon');
       this.$deleteIcon = $('.delete-icon');
       this.$clearButton = $('#clear-button');
       this.activateDeleteButton();

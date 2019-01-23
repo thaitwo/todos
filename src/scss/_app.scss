@@ -127,8 +127,11 @@ input {
   position: relative;
   width: 800px;
 
-  &:hover .delete-icon {
-    display: block;
+  &:hover {
+    .draggable-icon,
+    .delete-icon {
+      display: block;
+    }
   }
 }
 
@@ -140,8 +143,8 @@ input {
   border: none;
   box-sizing: border-box;
   line-height: 40px;
-  margin: 0 0 0 3rem;
-  padding: 0 1rem;
+  margin: 0 0 0 2rem;
+  padding: 0 .8rem;
   width: 452px;
 }
 
@@ -159,7 +162,7 @@ input {
   font-size: 1.3rem;
   margin: 0 0 0 2rem;
   line-height: 40px;
-  padding: 0 1rem;
+  padding: 0 .8rem;
   text-align: left;
 }
 
@@ -168,16 +171,26 @@ input {
   text-decoration: line-through;
 }
 
-.delete-icon {
-  background-color: #eeeeee;
+.todo-item-icon-container {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.icon {
+  background-color: $grey-200;
   border: none;
   border-radius: .3rem;
-  display: none;
-  padding: .7rem .6rem;
-  position: absolute;
-  top: .25rem;
-  right: 0;
+  display: inline-block;
+  margin-left: .8rem;
+  padding: .7rem .7rem;
   transition: all .2s;
+
+  i {
+    color: $grey-400;
+    font-size: .875rem;
+  }
 
   &:hover {
     background-color: $deep-orange-600;
@@ -189,9 +202,13 @@ input {
   }
 }
 
-.delete-icon i {
-  color: #cccccc;
-  display: block;
+.draggable-icon:hover {
+  cursor: move;
+}
+
+.delete-icon,
+.draggable-icon {
+  display: none;
 }
 
 .todo-edit {
