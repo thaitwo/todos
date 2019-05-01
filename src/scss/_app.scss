@@ -46,6 +46,10 @@ input {
   margin-right: auto;
   position: relative;
   width: 500px;
+
+  &.disabled {
+    visibility: hidden;
+  }
 }
 
 #clear-input-button {

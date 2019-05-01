@@ -12,6 +12,7 @@ import { Sortable } from '@shopify/draggable';
     init: function() {
       this.$appContainer = $('#app-container');
       this.$todosList = $('#todos-list');
+      this.$inputContainer = $('.input-container');
       this.$todoInput = $('#todo-input');
       this.$clearInputButton = $('#clear-input-button');
       this.$clearButton = $('#clear-button');
@@ -20,6 +21,7 @@ import { Sortable } from '@shopify/draggable';
       this.$completedTodosContainer = $('#completed-todos');
       this.todos = store.get('todos') || [];
       this.completedTodos = store.get('completed-todos') || [];
+      this.completedTodosVisibility = store.get('completed-todos-visibility') || 'display';
       this.$draggableIcon
       this.$deleteIcon;
       this.escPressed;
@@ -28,11 +30,12 @@ import { Sortable } from '@shopify/draggable';
         handle: '.draggable-icon'
       });
       this.displayTodosOnLoad();
+      this.displayCompletedTodosOnLoad();
       this.getInputValue();
       this.activateEventHandlers();
       this.activateClearButton();
       this.activateClearCompletedButton();
-      // this.disableNewTodoInput();
+      this.toggleNewTodoInput();
     },
 
 
@@ -42,7 +45,7 @@ import { Sortable } from '@shopify/draggable';
       this.$clearInputButton.on('click', this.clearInputValue.bind(this));
       this.$todosList
       .on('dblclick', 'label', this.focusOnTodoForEditing.bind(this))
-      .on('keyup', 'input.todo-edit', this.updateOnEnter.bind(this))
+      .on('keyup', 'input.todo-edit', this.startUpdateOnEnter.bind(this))
       .on('blur', 'input.todo-edit', this.updateAndClose.bind(this))
       .on('click', 'input.checkbox', this.toggleCheckbox.bind(this));
       this.$hideShowButton.on('click', this.toggleHideShowButton.bind(this));
@@ -52,6 +55,7 @@ import { Sortable } from '@shopify/draggable';
 
     // Toggle clear input button
     toggleClearInputButton: function() {
+      // If input field has a value, display clear icon
       if (this.$todoInput.val()) {
         this.$clearInputButton.addClass('is-visible');
       } else {
@@ -81,6 +85,10 @@ import { Sortable } from '@shopify/draggable';
           // Get submitted value from input and create object
           var $input = $(event.target);
           var val = $input.val().trim();
+          // If input is empty on enter keypress, return and do nothing
+          if (val === '') {
+            return;
+          }
           var todoItem = {
             task: val,
             completed: false
@@ -95,7 +103,7 @@ import { Sortable } from '@shopify/draggable';
           // Make "Clear All" button visible
           that.$clearButton.addClass('is-visible');
           that.activateDeleteButton();
-          // that.disableNewTodoInput();
+          that.toggleNewTodoInput();
         }
       });
     },
@@ -109,7 +117,7 @@ import { Sortable } from '@shopify/draggable';
 
 
     // Update todo item on keypress
-    updateOnEnter: function(event) {
+    startUpdateOnEnter: function(event) {
       var keyPressed = event.which || event.keyCode;
 
       if (keyPressed === ESCAPE_KEY) {
@@ -146,6 +154,8 @@ import { Sortable } from '@shopify/draggable';
         this.todos.splice(index, 1);
         store.set('todos', this.todos);
         this.displayTodos(this.todos);
+        this.toggleNewTodoInput();
+        // this.toggleClearInputButton();
       }
       // Otherwise, update todo
       else {
@@ -177,8 +187,8 @@ import { Sortable } from '@shopify/draggable';
         store.set('todos', this.todos);
 
         this.displayTodos();
-        this.toggleClearButton();
-        // this.disableNewTodoInput();
+        this.toggleClearAllButton();
+        this.toggleNewTodoInput();
         this.$todoInput.focus();
       }.bind(this));
     },
@@ -196,7 +206,7 @@ import { Sortable } from '@shopify/draggable';
         store.set('completed-todos', this.completedTodos);
 
         this.displayCompletedTodos();
-        this.toggleClearButton();
+        this.toggleClearAllButton();
         this.$todoInput.focus();
       }.bind(this));
     },
@@ -214,12 +224,30 @@ import { Sortable } from '@shopify/draggable';
 
     // Toggle hide/show button for completed todos
     toggleHideShowButton: function() {
+      var visibilityStatus = this.$completedTodosContainer.css('display');
       this.$completedTodosContainer.slideToggle();
+      
+      // Set visibility status in storage for completed todos container to maintain visibility status on page reload
+      if (visibilityStatus === 'block') {
+        store.set('completed-todos-visibility', 'hidden');
+      } else {
+        store.set('completed-todos-visibility', 'display');
+      }
+    },
+
+
+    // Show or hide completed todos container on page reload
+    displayCompletedTodosOnLoad: function() {
+      if (this.completedTodosVisibility === 'hidden') {
+        this.$completedTodosContainer.hide();
+      } else {
+        this.$completedTodosContainer.show();
+      }
     },
 
 
     // Toggle Clear All Button
-    toggleClearButton: function() {
+    toggleClearAllButton: function() {
       var todosLength = this.todos.length;
       var completedTodosLength = this.completedTodos.length;
 
@@ -244,10 +272,9 @@ import { Sortable } from '@shopify/draggable';
       this.$deleteIcon.on('click', function(event) {
         event.preventDefault();
         // Get name of todo item
-        var task = event.currentTarget.parentElement.textContent;
+        var task = $(event.currentTarget.parentElement).siblings('label')[0].textContent;
         // Get index for clicked item
         var index = this.getIndex(task, this.todos);
-    
         // Remove item from list based on index
         if (index > -1) {
           this.todos.splice(index, 1);
@@ -256,8 +283,8 @@ import { Sortable } from '@shopify/draggable';
         store.set('todos', this.todos);
         // Display todos
         this.displayTodos(this.todos);
-        // this.disableNewTodoInput();
-        this.toggleClearButton();
+        this.toggleNewTodoInput();
+        this.toggleClearAllButton();
       }.bind(this));
     },
 
@@ -281,7 +308,7 @@ import { Sortable } from '@shopify/draggable';
       store.set('todos', this.todos);
       store.set('completed-todos', this.completedTodos);
       this.displayTodos(this.todos);
-      this.displayCompletedTodos(this.completedTodos);
+      this.toggleCompletedTodos(this.completedTodos);
     },
 
 
@@ -374,7 +401,7 @@ import { Sortable } from '@shopify/draggable';
       this.$todosList.empty();
       this.$todosList.append(todos);
       
-      this.toggleClearButton();
+      this.toggleClearAllButton();
       this.$draggableIcon = $('.draggable-icon');
       this.$deleteIcon = $('.delete-icon');
       this.$clearButton = $('#clear-button');
@@ -383,7 +410,7 @@ import { Sortable } from '@shopify/draggable';
     },
 
 
-    // Allow list item order to be sortable
+    // Activate Sortable to allow list item order to be sortable
     activateSortableList: function() {
       this.sortableList.on('sortable:stop', function(sortableEvent) {
         var oldIndex = sortableEvent.oldIndex;
@@ -400,16 +427,15 @@ import { Sortable } from '@shopify/draggable';
 
 
     // Disable new todo input if todos length equals 3
-    disableNewTodoInput: function() {
+    toggleNewTodoInput: function() {
       var todosLength = this.todos.length;
 
       if (todosLength === 3) {
-        this.$todoInput.prop('disabled', true);
-        this.$todoInput.addClass('disabled');
+        this.$inputContainer.addClass('disabled', true);
       } else {
-        this.$todoInput.prop('disabled', false);
-        this.$todoInput.removeClass('disabled');
+        this.$inputContainer.removeClass('disabled', false);
         this.$todoInput.focus();
+        this.toggleClearInputButton();
       }
     },
 
