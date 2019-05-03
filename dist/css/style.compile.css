@@ -10,7 +10,7 @@ input {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.3rem; }
 
-#clear-button,
+#clear-todos-button,
 #clear-completed-button,
 #hide-show-completed-button {
   background-color: transparent;
@@ -21,13 +21,13 @@ input {
   outline: none;
   padding: 0 12px;
   text-decoration: underline; }
-  #clear-button:hover,
+  #clear-todos-button:hover,
   #clear-completed-button:hover,
   #hide-show-completed-button:hover {
     background-color: rgba(0, 0, 0, 0.2);
     cursor: pointer; }
 
-#clear-button {
+#clear-todos-button {
   display: none; }
 
 .is-visible {

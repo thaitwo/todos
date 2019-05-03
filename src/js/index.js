@@ -16,7 +16,7 @@ var uuidv4 = require('uuid/v4');
       this.$inputContainer = $('.input-container');
       this.$todoInput = $('#todo-input');
       this.$clearInputButton = $('#clear-input-button');
-      this.$clearButton = $('#clear-button');
+      this.$clearButton = $('#clear-todos-button');
       this.$clearCompletedButton = $('#clear-completed-button');
       this.$hideShowButton = $('#hide-show-completed-button');
       this.$completedTodosContainer = $('#completed-todos');
@@ -313,6 +313,8 @@ var uuidv4 = require('uuid/v4');
       store.set('completed-todos', this.completedTodos);
       this.displayTodos(this.todos);
       this.displayCompletedTodos(this.completedTodos);
+      this.toggleClearAllButton();
+      this.toggleNewTodoInput();
     },
 
 
@@ -335,6 +337,7 @@ var uuidv4 = require('uuid/v4');
       store.set('completed-todos', this.completedTodos);
       this.displayTodos(this.todos);
       this.displayCompletedTodos(this.completedTodos);
+      this.toggleNewTodoInput();
     },
 
 
@@ -410,7 +413,7 @@ var uuidv4 = require('uuid/v4');
       this.toggleClearAllButton();
       this.$draggableIcon = $('.draggable-icon');
       this.$deleteIcon = $('.delete-icon');
-      this.$clearButton = $('#clear-button');
+      this.$clearButton = $('#clear-todos-button');
       this.activateDeleteButton();
       this.activateSortableList();
     },
@@ -434,6 +437,7 @@ var uuidv4 = require('uuid/v4');
 
     // Disable new todo input if todos length equals 3
     toggleNewTodoInput: function() {
+      console.log('working');
       var todosLength = this.todos.length;
 
       if (todosLength === 3) {
