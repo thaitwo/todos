@@ -437,7 +437,6 @@ var uuidv4 = require('uuid/v4');
 
     // Disable new todo input if todos length equals 3
     toggleNewTodoInput: function() {
-      console.log('working');
       var todosLength = this.todos.length;
 
       if (todosLength === 3) {
