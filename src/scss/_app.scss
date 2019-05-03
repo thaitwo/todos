@@ -19,7 +19,6 @@ input {
   background-color: transparent;
   border: none;
   border-radius: 3px;
-  display: none;
   line-height: 28px;
   margin: auto;
   outline: none;
@@ -30,6 +29,10 @@ input {
     background-color: rgba($black, .2);
     cursor: pointer;
   }
+}
+
+#clear-button {
+  display: none;
 }
 
 .is-visible {
