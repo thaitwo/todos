@@ -439,7 +439,7 @@ var uuidv4 = require('uuid/v4');
     toggleNewTodoInput: function() {
       var todosLength = this.todos.length;
 
-      if (todosLength === 3) {
+      if (todosLength === 4) {
         this.$inputContainer.addClass('disabled', true);
       } else {
         this.$inputContainer.removeClass('disabled', false);

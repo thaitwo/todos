@@ -5,29 +5,36 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Todos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="dist/css/style.compile.css">
   <link rel="shortcut icon" href="dist/assets/favicon.png">
 </head>
 <body>
+  <div id="sidebar-container">
+    <h2>TF</h2>
+  </div>
   <div id="app-container">
-    <header>
-        <h2>Three things I will accomplish today.</h2>
-        <div class="input-container">
-            <input id="todo-input" type="text" placeholder="Enter a new task">
-            <button id="clear-input-button"><i class="fas fa-times-circle"></i></button>
+    <div id="app-inner-container">
+      <header>
+          <h2 class="text-header">Yesterday you said tomorrow.</h2>
+          <div class="input-container">
+              <span class="icon-add-task"><i class="fas fa-plus"></i></span>
+              <input id="todo-input" type="text" placeholder="Add a new task">
+              <button id="clear-input-button"><i class="fas fa-times-circle"></i></button>
+          </div>
+      </header>
+  
+      <ul id="todos-list"></ul>
+      <button id="clear-todos-button">Clear all</button>
+  
+      <div id="completed-todos-container">
+        <div class="">
+          <button id="hide-show-completed-button">Completed Tasks</button>
+          <!-- <button id="clear-completed-button">Clear Completed</button> -->
         </div>
-    </header>
-
-    <ul id="todos-list"></ul>
-    <button id="clear-todos-button">Clear all</button>
-
-    <div id="completed-todos-container">
-      <div class="xlist">
-        <button id="hide-show-completed-button">Hide/Show Completed</button>
-        <button id="clear-completed-button">Clear Completed</button>
+        <ul id="completed-todos"></ul>
       </div>
-      <ul id="completed-todos"></ul>
     </div>
   </div>
 
