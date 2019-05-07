@@ -5,14 +5,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Todos</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
   <link rel="stylesheet" href="dist/css/style.compile.css">
   <link rel="shortcut icon" href="dist/assets/favicon.png">
 </head>
 <body>
   <div id="sidebar-container">
-    <h2>TF</h2>
+    <h2 class="header-logo">TF</h2>
   </div>
   <div id="app-container">
     <div id="app-inner-container">
@@ -25,12 +25,20 @@
           </div>
       </header>
   
-      <ul id="todos-list"></ul>
-      <button id="clear-todos-button">Clear all</button>
+      <div class="todos-list-container">
+        <ul id="todos-list"></ul>
+      </div>
+      
+      <div class="clear-todos-button-container">
+        <button id="clear-todos-button">clear all</button>
+      </div>
   
       <div id="completed-todos-container">
         <div class="">
-          <button id="hide-show-completed-button">Completed Tasks</button>
+          <button id="hide-show-completed-button">
+            <span>Completed Tasks</span>
+            <i class="fas fa-angle-down icon-dropdown"></i>
+          </button>
           <!-- <button id="clear-completed-button">Clear Completed</button> -->
         </div>
         <ul id="completed-todos"></ul>

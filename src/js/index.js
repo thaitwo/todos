@@ -233,8 +233,10 @@ var uuidv4 = require('uuid/v4');
       
       // Set visibility status in storage for completed todos container to maintain visibility status on page reload
       if (visibilityStatus === 'block') {
+        this.$hideShowButton.removeClass('unround-borders');
         store.set('completed-todos-visibility', 'hidden');
       } else {
+        this.$hideShowButton.addClass('unround-borders');
         store.set('completed-todos-visibility', 'display');
       }
     },

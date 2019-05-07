@@ -1,13 +1,34 @@
 
 
 .draggable-container--is-dragging {
+  position: relative;
 
   .draggable-source--is-dragging {
-    border: 3px dashed rgba($color: $blue-700, $alpha: 1);
+    background-color: $color-secondary;
+    border: 3px dashed rgba($color: $color-primary, $alpha: 1);
+
+    .draggable-icon {
+      background-color: $color-secondary;
+
+      &:hover i {
+        color: $color-tertiary;
+      }
+    }
+
+    .delete-icon {
+      visibility: hidden;
+    }
   }
 
   .draggable-mirror {
-    background-color: $blue-700;
-    color: $white;
+    // background-color: $color-primary;
+    // right: 0;
+    // color: $white;
+    // width: 100%;
+    display: none;
   }
+}
+
+.draggable-container--over {
+  position: relative;
 }
