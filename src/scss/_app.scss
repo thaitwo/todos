@@ -5,7 +5,6 @@ body {
 }
 
 header {
-  padding: 0 24px;
   text-align: left;
 }
 
@@ -35,7 +34,7 @@ input {
 #app-inner-container {
   margin-left: auto;
   margin-right: auto;
-  max-width: 664px;
+  max-width: 620px;
 }
 
 .input-container {
@@ -59,18 +58,19 @@ input {
   outline: none;
   position: absolute;
   top: 14px;
-  right: 0;
+  right: 6px;
 
   i {
-    color: rgba($black, .2);
+    color: $color-tertiary;
     font-size: 16px;
+    transition: all .1s;
   }
 
   &:hover {
     cursor: pointer;
 
     i {
-      color: rgba($black, .4);
+      color: $color-primary;
     }
   }
 }
@@ -85,7 +85,7 @@ input {
   line-height: 48px;
   height: 48px;
   outline: none;
-  padding: 16px 16px 16px 2.5rem;
+  padding: 16px 2.5rem;
   text-align: left;
   width: 100%;
 
@@ -96,10 +96,6 @@ input {
 
 ::placeholder {
   color: $color-tertiary;
-}
-
-.todos-list-container {
-  padding: 0 24px;
 }
 
 #todos-list {
@@ -130,7 +126,6 @@ input {
   box-sizing: border-box;
   font-size: 16px;
   outline: none;
-  padding: .5rem 0;
   position: relative;
 
   &:hover {
@@ -146,13 +141,13 @@ input {
 }
 
 #todos-list li input {
-  border: none;
-  border-radius: .2rem;
+  border-radius: 1px;
   box-sizing: border-box;
+  color: $textColor-primary;
   font-size: 1rem;
-  line-height: 44px;
+  line-height: 30px;
   margin: 0 0 0 2rem;
-  padding: 0 .5rem;
+  padding: .7rem 1rem;
   width: 95%;
 }
 
@@ -160,18 +155,19 @@ input {
   margin-left: 0;
   position: absolute;
   left: 0;
-  top: .25rem;
-  height: 32px;
-  width: 32px;
+  top: .7rem;
+  height: 30px;
+  width: 30px;
 }
 
 .todo-item label {
+  border: 1px solid transparent;
   color: $textColor-primary;
   display: block;
   font-size: 1rem;
-  margin: 0 0 0 2rem;
-  line-height: 44px;
-  padding-left: .5rem;
+  margin: 0 0 0 1.8rem;
+  line-height: 30px;
+  padding: .7rem 5rem .7rem .5rem;
   text-align: left;
 }
 
@@ -220,7 +216,13 @@ input {
 }
 
 .todo-edit {
-  box-shadow: inset 0 0 6px rgba($black,.2);
+  box-shadow: inset 0 0 4px rgba($color-primary,.4), inset 0 0 8px rgba($color-primary,.2);
+  border: 1px solid $color-primary !important;
   display: none;
   outline: none;
+  margin-left: 0 !important;
+  padding-left: 2.3rem !important;
+  position: relative;
+  width: 100% !important;
+  z-index: 4;
 }

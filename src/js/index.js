@@ -42,7 +42,10 @@ var uuidv4 = require('uuid/v4');
 
     // Activate all event handlers
     activateEventHandlers: function() {
-      this.$todoInput.on('keyup', this.toggleClearInputButton.bind(this));
+      this.$todoInput
+      .on('keyup', this.toggleClearInputButton.bind(this))
+      .on('focus', this.darkenIconOnFocus.bind(this))
+      .on('blur', this.lightenIconOnBlur.bind(this));
       this.$clearInputButton.on('click', this.clearInputValue.bind(this));
       this.$todosList
       .on('dblclick', 'label', this.focusOnTodoForEditing.bind(this))
@@ -51,6 +54,19 @@ var uuidv4 = require('uuid/v4');
       .on('click', 'input.checkbox', this.toggleCheckbox.bind(this));
       this.$hideShowButton.on('click', this.toggleHideShowButton.bind(this));
       this.$completedTodosContainer.on('click', 'input', this.toggleCompletedTodos.bind(this));
+    },
+
+
+    // Toggle the color of plus icon in input field on focus/blur
+    darkenIconOnFocus: function() {
+      var $addIcon = $(event.currentTarget).siblings('.icon-add-task');
+      $addIcon.addClass('focus');
+    },
+
+    
+    lightenIconOnBlur: function() {
+      var $addIcon = $(event.currentTarget).siblings('.icon-add-task');
+      $addIcon.removeClass('focus');
     },
 
 
@@ -231,7 +247,8 @@ var uuidv4 = require('uuid/v4');
       var visibilityStatus = this.$completedTodosContainer.css('display');
       this.$completedTodosContainer.slideToggle();
       
-      // Set visibility status in storage for completed todos container to maintain visibility status on page reload
+      // Set visibility status in storage for completed todos
+      // container to maintain visibility status on page reload
       if (visibilityStatus === 'block') {
         this.$hideShowButton.removeClass('unround-borders');
         store.set('completed-todos-visibility', 'hidden');
@@ -248,6 +265,7 @@ var uuidv4 = require('uuid/v4');
         this.$completedTodosContainer.hide();
       } else {
         this.$completedTodosContainer.show();
+        this.$hideShowButton.addClass('unround-borders');
       }
     },
 
