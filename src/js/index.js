@@ -23,6 +23,7 @@ var uuidv4 = require('uuid/v4');
       this.todos = store.get('todos') || [];
       this.completedTodos = store.get('completed-todos') || [];
       this.completedTodosVisibility = store.get('completed-todos-visibility') || 'display';
+      this.$completedTodosCheckboxes;
       this.$draggableIcon
       this.$deleteIcon;
       this.escPressed;
@@ -30,13 +31,12 @@ var uuidv4 = require('uuid/v4');
         draggable: 'li',
         handle: '.draggable-icon'
       });
+      this.activateEventHandlers();
       this.displayTodosOnLoad();
       this.showCompletedTodosOnRefresh();
       this.getInputValue();
-      this.activateEventHandlers();
       this.activateClearButton();
       this.activateClearCompletedButton();
-      this.toggleNewTodoInput();
     },
 
 
@@ -59,7 +59,7 @@ var uuidv4 = require('uuid/v4');
 
     // Toggle the color of plus icon in input field on focus/blur
     darkenIconOnFocus: function() {
-      var $addIcon = $(event.currentTarget).siblings('.icon-add-task');
+      var $addIcon = $(event.target).siblings('.icon-add-task');
       $addIcon.addClass('focus');
     },
 
@@ -121,10 +121,10 @@ var uuidv4 = require('uuid/v4');
           // Clear input field
           that.$todoInput.val('');
           that.displayTodos(that.todos);
+          that.disableCompletedCheckboxes();
           // Make "Clear All" button visible
           that.$clearButton.addClass('is-visible');
           that.activateDeleteButton();
-          that.toggleNewTodoInput();
         }
       });
     },
@@ -143,16 +143,16 @@ var uuidv4 = require('uuid/v4');
 
       if (keyPressed === ESCAPE_KEY) {
         this.escPressed = true;
-        if (this.todos.length < 3) {
+        if (this.todos.length < 4) {
           this.$todoInput.focus(); // this will trigger updateAndClose()
         } else {
           $(event.target).blur();
         }
       }
       if (keyPressed === ENTER_KEY) {
-        if (this.todos.length < 3) {
+        if (this.todos.length < 4) { // if there are less than 4 todos, focus on new input field
           this.$todoInput.focus(); // this will trigger updateAndClose()
-        } else {
+        } else { //otherwise, escape edit mode and focus on nothing
           $(event.target).blur();
         }
       }
@@ -175,7 +175,6 @@ var uuidv4 = require('uuid/v4');
         this.todos.splice(index, 1);
         store.set('todos', this.todos);
         this.displayTodos(this.todos);
-        this.toggleNewTodoInput();
       }
       // Otherwise, update todo
       else {
@@ -208,7 +207,6 @@ var uuidv4 = require('uuid/v4');
 
         this.displayTodos();
         this.toggleClearAllButton();
-        this.toggleNewTodoInput();
         this.$todoInput.focus();
       }.bind(this));
     },
@@ -307,8 +305,8 @@ var uuidv4 = require('uuid/v4');
         store.set('todos', this.todos);
         // Display todos
         this.displayTodos(this.todos);
-        this.toggleNewTodoInput();
         this.toggleClearAllButton();
+        this.disableCompletedCheckboxes();
       }.bind(this));
     },
 
@@ -334,7 +332,6 @@ var uuidv4 = require('uuid/v4');
       this.displayTodos(this.todos);
       this.displayCompletedTodos(this.completedTodos);
       this.toggleClearAllButton();
-      this.toggleNewTodoInput();
     },
 
 
@@ -357,7 +354,10 @@ var uuidv4 = require('uuid/v4');
       store.set('completed-todos', this.completedTodos);
       this.displayTodos(this.todos);
       this.displayCompletedTodos(this.completedTodos);
-      this.toggleNewTodoInput();
+
+      // if length of todos equal or greater than 4, then disable checkboxes for completed todos
+      // then, disable the new task input field
+      this.disableCompletedCheckboxes();
     },
 
 
@@ -389,11 +389,13 @@ var uuidv4 = require('uuid/v4');
       });
       this.$completedTodosContainer.empty();
       this.$completedTodosContainer.append(completedTodosHTML);
+      this.$completedTodosCheckboxes = $('#completed-todos li input');
+      this.disableCompletedCheckboxes();
     },
 
 
     // Display all todos with data provided
-    displayTodos: function(todos) { 
+    displayTodos: function(todos) {
       if (this.todos.length === 0) {
         this.$todosList.empty();
         return;
@@ -430,6 +432,7 @@ var uuidv4 = require('uuid/v4');
       this.$todosList.empty();
       this.$todosList.append(todos);
       
+      this.toggleNewTodoInput();
       this.toggleClearAllButton();
       this.$draggableIcon = $('.draggable-icon');
       this.$deleteIcon = $('.delete-icon');
@@ -455,11 +458,24 @@ var uuidv4 = require('uuid/v4');
     },
 
 
-    // Disable new todo input if todos length equals 3
+    // Disable checkboxes for completed todos if todos has 4 or more items
+    disableCompletedCheckboxes: function() {
+      var todosLength = this.todos.length;
+      var completedTodosLength = this.completedTodos.length;
+
+      if (todosLength >= 4 && completedTodosLength) {
+        this.$completedTodosCheckboxes.attr('disabled', true);
+      } else if (todosLength < 4 && completedTodosLength) {
+        this.$completedTodosCheckboxes.attr('disabled', false);
+      }
+    },
+
+
+    // Disable new todo input if todos length equals 4
     toggleNewTodoInput: function() {
       var todosLength = this.todos.length;
 
-      if (todosLength === 4) {
+      if (todosLength >= 4) {
         this.$inputContainer.addClass('disabled', true);
       } else {
         this.$inputContainer.removeClass('disabled', false);
