@@ -37,15 +37,6 @@ input {
   max-width: 620px;
 }
 
-.input-container {
-  position: relative;
-  margin: 2rem 0;
-
-  &.disabled {
-    visibility: hidden;
-  }
-}
-
 .text-header {
   color: $textColor-secondary;
   font-weight: 600;
@@ -75,6 +66,23 @@ input {
   }
 }
 
+.input-container {
+  position: relative;
+  margin: 2rem 0;
+
+  &.disabled {
+    // visibility: hidden;
+
+    .icon-add-task {
+      display: none;
+    }
+
+    #todo-input {
+      background-color: $color-secondary;
+    }
+  }
+}
+
 #todo-input {
   background-color: transparent;
   border: 2px dashed $color-tertiary;
@@ -88,10 +96,6 @@ input {
   padding: 16px 2.5rem;
   text-align: left;
   width: 100%;
-
-  &.disabled {
-    visibility: hidden;
-  }
 }
 
 ::placeholder {

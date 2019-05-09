@@ -477,8 +477,12 @@ var uuidv4 = require('uuid/v4');
 
       if (todosLength >= 4) {
         this.$inputContainer.addClass('disabled', true);
+        this.$inputContainer.find('#todo-input').attr('disabled', true);
+        this.$inputContainer.find('#todo-input').attr('placeholder', 'Check off a task below first...');
       } else {
         this.$inputContainer.removeClass('disabled', false);
+        this.$inputContainer.find('#todo-input').attr('disabled', false);
+        this.$inputContainer.find('#todo-input').attr('placeholder', 'Add a new task');
         this.$todoInput.focus();
         this.toggleClearInputButton();
       }

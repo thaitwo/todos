@@ -93,12 +93,6 @@ input {
   margin-right: auto;
   max-width: 620px; }
 
-.input-container {
-  position: relative;
-  margin: 2rem 0; }
-  .input-container.disabled {
-    visibility: hidden; }
-
 .text-header {
   color: #4F4ABA;
   font-weight: 600; }
@@ -120,6 +114,14 @@ input {
     #clear-input-button:hover i {
       color: #4F4ABA; }
 
+.input-container {
+  position: relative;
+  margin: 2rem 0; }
+  .input-container.disabled .icon-add-task {
+    display: none; }
+  .input-container.disabled #todo-input {
+    background-color: #F4F4F9; }
+
 #todo-input {
   background-color: transparent;
   border: 2px dashed #D6D9ED;
@@ -133,8 +135,6 @@ input {
   padding: 16px 2.5rem;
   text-align: left;
   width: 100%; }
-  #todo-input.disabled {
-    visibility: hidden; }
 
 ::placeholder {
   color: #D6D9ED; }
@@ -299,7 +299,7 @@ input {
   position: relative; }
   .draggable-container--is-dragging .draggable-source--is-dragging {
     background-color: #F4F4F9;
-    border: 3px dashed #4f4aba; }
+    border: 1px solid #4f4aba; }
     .draggable-container--is-dragging .draggable-source--is-dragging .draggable-icon {
       background-color: #F4F4F9; }
       .draggable-container--is-dragging .draggable-source--is-dragging .draggable-icon:hover i {
