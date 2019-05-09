@@ -7,14 +7,6 @@ body {
 header {
   text-align: left;
 }
-
-.header-logo {
-  color: $white;
-  font-size: 32px;
-  font-weight: 700;
-  margin: .8rem 0;
-  text-align: center;
-}
   
 input {
   font-family: 'Montserrat', sans-serif;;
@@ -71,10 +63,13 @@ input {
   margin: 2rem 0;
 
   &.disabled {
-    // visibility: hidden;
 
     .icon-add-task {
       display: none;
+    }
+
+    #clear-input-button {
+      display: none !important;
     }
 
     #todo-input {

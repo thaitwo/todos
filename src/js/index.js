@@ -502,6 +502,8 @@ var uuidv4 = require('uuid/v4');
       // Check if completed todos storage had any todo items
       if (completedTodosLength > 0) {
         this.displayCompletedTodos(this.completedTodos);
+      } else if (completedTodosLength == 0) {
+        store.set('completed-todos-visibility', 'hidden');
       }
     },
   };

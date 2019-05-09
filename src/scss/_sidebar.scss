@@ -9,4 +9,12 @@
   left: 0;
   bottom: 0;
   width: 4.5rem;
+
+  .header-logo {
+    color: $white;
+    font-size: 56px;
+    font-weight: 700;
+    margin: .8rem 0;
+    text-align: center;
+  }
 }

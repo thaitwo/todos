@@ -69,13 +69,6 @@ body {
 header {
   text-align: left; }
 
-.header-logo {
-  color: #FFFFFF;
-  font-size: 32px;
-  font-weight: 700;
-  margin: .8rem 0;
-  text-align: center; }
-
 input {
   font-family: 'Montserrat', sans-serif;
   font-size: 1.2rem; }
@@ -119,6 +112,8 @@ input {
   margin: 2rem 0; }
   .input-container.disabled .icon-add-task {
     display: none; }
+  .input-container.disabled #clear-input-button {
+    display: none !important; }
   .input-container.disabled #todo-input {
     background-color: #F4F4F9; }
 
@@ -254,6 +249,12 @@ input {
   left: 0;
   bottom: 0;
   width: 4.5rem; }
+  #sidebar-container .header-logo {
+    color: #FFFFFF;
+    font-size: 56px;
+    font-weight: 700;
+    margin: .8rem 0;
+    text-align: center; }
 
 #completed-todos-container {
   margin-top: 3rem;
@@ -304,6 +305,8 @@ input {
       background-color: #F4F4F9; }
       .draggable-container--is-dragging .draggable-source--is-dragging .draggable-icon:hover i {
         color: #D6D9ED; }
+    .draggable-container--is-dragging .draggable-source--is-dragging input.checkbox {
+      display: none; }
     .draggable-container--is-dragging .draggable-source--is-dragging .delete-icon {
       visibility: hidden; }
   .draggable-container--is-dragging .draggable-mirror {
