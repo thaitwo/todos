@@ -139,19 +139,6 @@ input {
   position: relative;
 }
 
-.checkbox-container {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 #todos-list li .checkbox-custom {
   background-color: $color-tertiary;
   border-radius: 5px;

@@ -167,18 +167,6 @@ input {
 .todo-view {
   position: relative; }
 
-.checkbox-container {
-  display: block;
-  position: relative;
-  padding-left: 35px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  font-size: 22px;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none; }
-
 #todos-list li .checkbox-custom {
   background-color: #D6D9ED;
   border-radius: 5px;
@@ -313,7 +301,10 @@ input.todo-edit {
       width: 20px;
       position: absolute;
       left: 0;
-      top: .7rem; }
+      top: .7rem;
+      transition: all .1s; }
+      #completed-todos li .checkbox-completed-custom:hover {
+        background-color: rgba(79, 74, 186, 0.6); }
     #completed-todos li .checkbox-completed-custom:after {
       content: "";
       position: absolute;
@@ -347,7 +338,8 @@ input.todo-edit {
       background-color: #F4F4F9; }
       .draggable-container--is-dragging .draggable-source--is-dragging .draggable-icon:hover i {
         color: #D6D9ED; }
-    .draggable-container--is-dragging .draggable-source--is-dragging input.checkbox {
+    .draggable-container--is-dragging .draggable-source--is-dragging input.checkbox,
+    .draggable-container--is-dragging .draggable-source--is-dragging span.checkbox-custom {
       display: none; }
     .draggable-container--is-dragging .draggable-source--is-dragging .delete-icon {
       visibility: hidden; }

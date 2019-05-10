@@ -44,6 +44,11 @@
       position: absolute;
       left: 0;
       top: .7rem;
+      transition: all .1s;
+
+      &:hover {
+        background-color: rgba($color-primary,.6);
+      }
     }
 
     .checkbox-completed-custom:after {
