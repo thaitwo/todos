@@ -139,6 +139,36 @@ input {
   position: relative;
 }
 
+.todo-item label.checkbox-container {
+  // display: inline;
+}
+
+#todos-list li .checkbox-custom {
+  background-color: $color-tertiary;
+  border-radius: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+  height: 22px;
+  width: 22px;
+  position: absolute;
+  left: 0;
+  top: .95rem;
+
+  &:hover {
+    border: 1px solid $color-primary;
+  }
+}
+
+#todos-list input[type="checkbox"] {
+  margin-left: 0;
+  position: absolute;
+  left: 0;
+  top: .95rem;
+  height: 22px;
+  width: 22px;
+  opacity: 0;
+}
+
 #todos-list li input {
   border-radius: 1px;
   box-sizing: border-box;
@@ -150,16 +180,7 @@ input {
   width: 95%;
 }
 
-#todos-list input[type="checkbox"] {
-  margin-left: 0;
-  position: absolute;
-  left: 0;
-  top: .7rem;
-  height: 30px;
-  width: 30px;
-}
-
-.todo-item label {
+.todo-item label.todo-text {
   border: 1px solid transparent;
   color: $textColor-primary;
   display: block;
@@ -168,11 +189,6 @@ input {
   line-height: 30px;
   padding: .7rem 5rem .7rem .5rem;
   text-align: left;
-}
-
-.todo-item label.completed {
-  color: #cccccc;
-  text-decoration: line-through;
 }
 
 .todo-item-icon-container {

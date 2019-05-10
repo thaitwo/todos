@@ -167,6 +167,28 @@ input {
 .todo-view {
   position: relative; }
 
+#todos-list li .checkbox-custom {
+  background-color: #D6D9ED;
+  border-radius: 5px;
+  box-sizing: border-box;
+  cursor: pointer;
+  height: 22px;
+  width: 22px;
+  position: absolute;
+  left: 0;
+  top: .95rem; }
+  #todos-list li .checkbox-custom:hover {
+    border: 1px solid #4F4ABA; }
+
+#todos-list input[type="checkbox"] {
+  margin-left: 0;
+  position: absolute;
+  left: 0;
+  top: .95rem;
+  height: 22px;
+  width: 22px;
+  opacity: 0; }
+
 #todos-list li input {
   border-radius: 1px;
   box-sizing: border-box;
@@ -177,15 +199,7 @@ input {
   padding: .7rem 1rem;
   width: 95%; }
 
-#todos-list input[type="checkbox"] {
-  margin-left: 0;
-  position: absolute;
-  left: 0;
-  top: .7rem;
-  height: 30px;
-  width: 30px; }
-
-.todo-item label {
+.todo-item label.todo-text {
   border: 1px solid transparent;
   color: #2B2761;
   display: block;
@@ -194,10 +208,6 @@ input {
   line-height: 30px;
   padding: .7rem 5rem .7rem .5rem;
   text-align: left; }
-
-.todo-item label.completed {
-  color: #cccccc;
-  text-decoration: line-through; }
 
 .todo-item-icon-container {
   display: flex;
@@ -283,11 +293,41 @@ input {
     font-size: .9rem;
     padding: 12px 0;
     position: relative;
-    text-align: left; }
+    text-align: left;
+    /* Style the checkmark/indicator */ }
     #completed-todos li input {
+      margin: 0;
       position: absolute;
       left: 0;
-      margin-left: 0; }
+      top: .7rem;
+      height: 20px;
+      width: 20px;
+      opacity: 0; }
+    #completed-todos li .checkbox-completed-custom {
+      background-color: #4F4ABA;
+      border-radius: 4px;
+      cursor: pointer;
+      height: 20px;
+      width: 20px;
+      position: absolute;
+      left: 0;
+      top: .7rem; }
+    #completed-todos li .checkbox-completed-custom:after {
+      content: "";
+      position: absolute;
+      display: none; }
+    #completed-todos li .checkbox-completed-custom:after {
+      display: block; }
+    #completed-todos li .checkbox-completed-custom:after {
+      left: 7px;
+      top: 3px;
+      width: 4px;
+      height: 10px;
+      border: solid white;
+      border-width: 0 3px 3px 0;
+      -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+      transform: rotate(45deg); }
     #completed-todos li label {
       color: rgba(43, 39, 97, 0.6);
       display: block;

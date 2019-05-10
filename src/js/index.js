@@ -53,7 +53,7 @@ var uuidv4 = require('uuid/v4');
       .on('blur', 'input.todo-edit', this.updateAndClose.bind(this))
       .on('click', 'input.checkbox', this.toggleCheckbox.bind(this));
       this.$hideShowButton.on('click', this.toggleHideShowButton.bind(this));
-      this.$completedTodosContainer.on('click', 'input', this.toggleCompletedTodos.bind(this));
+      this.$completedTodosContainer.on('click', '.checkbox-completed-custom', this.toggleCompletedTodos.bind(this));
     },
 
 
@@ -320,7 +320,7 @@ var uuidv4 = require('uuid/v4');
       var todo = this.todos[index];
       
       this.todos[index].completed = isChecked;
-
+      console.log("Clicked Todo");
       // If item is checked, remove item from todos list and add to completed todos list
       if (isChecked === true) {
         this.todos.splice(index, 1);
@@ -337,12 +337,14 @@ var uuidv4 = require('uuid/v4');
 
     // Add completed todo item back to todo list if checkbox gets unchecked
     toggleCompletedTodos: function(event) {
-      var isChecked = $(event.currentTarget).prop('checked');
+      var isChecked = $(event.currentTarget).siblings('input.checkbox').prop('checked');
       var completedTodoId = $(event.currentTarget).closest('.todo-item-completed')[0].id;
       var index = this.getIndex(completedTodoId, this.completedTodos);
       var completedTodo = this.completedTodos[index];
       
-      this.completedTodos[index].completed = isChecked;
+      // Update 'completed' status of completed todo item
+      // Used to remove or keep item in completed todos list (see right below)
+      completedTodo.completed = isChecked;
 
       // If item is checked, remove item from todos list and add to completed todos list
       if (isChecked === false) {
@@ -350,13 +352,13 @@ var uuidv4 = require('uuid/v4');
         this.todos.push(completedTodo);
       }
 
+      // Update both todos list in storage, then display them
       store.set('todos', this.todos);
       store.set('completed-todos', this.completedTodos);
       this.displayTodos(this.todos);
       this.displayCompletedTodos(this.completedTodos);
 
-      // if length of todos equal or greater than 4, then disable checkboxes for completed todos
-      // then, disable the new task input field
+      // If length of todos equal or greater than 4, disable checkboxes for completed todos
       this.disableCompletedCheckboxes();
     },
 
@@ -384,6 +386,7 @@ var uuidv4 = require('uuid/v4');
 
         return '<li class="todo-item-completed" id="' + id + '">' +
             '<input class="checkbox" type="checkbox"' + isChecked + '>' +
+            '<span class="checkbox-completed-custom"></span>' +
             '<label class="' + completed + '">' + task + '</label>' +
           '</li>';
       });
@@ -406,20 +409,20 @@ var uuidv4 = require('uuid/v4');
         var task = todo.task;
         var id = todo.id;
         var isChecked;
-        var completed;
 
         if (todo.completed === true) {
-          isChecked = 'checked';
-          completed = 'completed';
+          isChecked = 'checked'; // Used to sort uncompleted & completed todos
         } else {
           isChecked = '';
-          completed = '';
         }
 
         return '<li class="todo-item" id="' + id + '">' +
           '<div class="todo-view">' +
-            '<input class="checkbox" type="checkbox"' + isChecked + '>' +
-            '<label class="' + completed + '">' + task + '</label>' +
+            '<label class="checkbox-container">' +
+              '<input class="checkbox" type="checkbox"' + isChecked + '>' +
+              '<span class="checkbox-custom"></span>' +
+            '</label>' +
+            '<label class="todo-text">' + task + '</label>' +
             '<div class="todo-item-icon-container">' +
               '<span class="icon draggable-icon"><i class="fas fa-bars"></i></span>' +
               '<button class="icon delete-icon"><i class="fas fa-trash-alt"></i></button>' +
