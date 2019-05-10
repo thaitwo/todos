@@ -139,45 +139,43 @@ input {
   position: relative;
 }
 
-.todo-item label.checkbox-container {
-  // display: inline;
+.checkbox-container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 #todos-list li .checkbox-custom {
   background-color: $color-tertiary;
   border-radius: 5px;
   box-sizing: border-box;
+  height: 22px;
+  width: 22px;
+  position: absolute;
+  left: 0;
+  top: .95rem;
+}
+
+#todos-list li .checkbox-custom:hover {
+  border: 1px solid $color-primary;
   cursor: pointer;
-  height: 22px;
-  width: 22px;
+}
+
+#todos-list li input[type="checkbox"] {
   position: absolute;
   left: 0;
   top: .95rem;
-
-  &:hover {
-    border: 1px solid $color-primary;
-  }
-}
-
-#todos-list input[type="checkbox"] {
-  margin-left: 0;
-  position: absolute;
-  left: 0;
-  top: .95rem;
+  margin: 0;
   height: 22px;
   width: 22px;
-  opacity: 0;
-}
-
-#todos-list li input {
-  border-radius: 1px;
-  box-sizing: border-box;
-  color: $textColor-primary;
-  font-size: 1rem;
-  line-height: 30px;
-  margin: 0 0 0 2rem;
-  padding: .7rem 1rem;
-  width: 95%;
+  opacity: .3;
 }
 
 .todo-item label.todo-text {
@@ -230,13 +228,16 @@ input {
   display: none;
 }
 
-.todo-edit {
+input.todo-edit {
   box-shadow: inset 0 0 4px rgba($color-primary,.4), inset 0 0 8px rgba($color-primary,.2);
   border: 1px solid $color-primary !important;
+  box-sizing: border-box;
   display: none;
+  font-size: 1rem;
+  line-height: 30px;
   outline: none;
   margin-left: 0 !important;
-  padding-left: 2.3rem !important;
+  padding: .7rem 2.3rem !important;
   position: relative;
   width: 100% !important;
   z-index: 4;
