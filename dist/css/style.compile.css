@@ -79,7 +79,7 @@ input {
 #app-container {
   padding: 64px 0;
   position: relative;
-  left: 4.5rem; }
+  margin-left: 4.5rem; }
 
 #app-inner-container {
   margin-left: auto;
